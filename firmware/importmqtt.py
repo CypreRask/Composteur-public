@@ -19,7 +19,7 @@ LATITUDE = 43.7102
 LONGITUDE = 7.2620
 
 # === Préparation du répertoire de stockage ===
-DATA_DIR = "D:\\composteur\\data"
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data") # Relative path
 os.makedirs(DATA_DIR, exist_ok=True)
 
 # === Fonction de parsing de la nouvelle trame 32 octets (V2) ===
@@ -124,7 +124,7 @@ def save_to_csv(timestamp, data, weather):
 # === Callback MQTT ===
 def on_connect(client, userdata, flags, rc):
     print("Connecté à TTN MQTT")
-    client.subscribe("v3/testcypres@ttn/devices/+/up")
+    client.subscribe(f"v3/{TTN_APP_ID}@ttn/devices/+/up")
 
 def on_message(client, userdata, msg):
     try:

@@ -2,7 +2,7 @@
 
 **Un écosystème connecté pour visualiser la vie invisible du sol.**
 
-> 🚧 **En Développement** : Ce projet est un prototype fonctionnel en cours d'amélioration.
+> 🚧 **En Développement** : Ce projet est un prototype fonctionnel en cours d'amélioration, une v1 avait déjà été déployé et une v2 avec plus de capteurs et un meilleur boitier est en cours de réalisation.
 
 Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et propose une expérience gamifiée pour comprendre les processus biologiques de décomposition.
 

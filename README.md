@@ -3,7 +3,7 @@
 **Un écosystème connecté pour visualiser la vie invisible du sol.**
 
 > 🚧 **En Développement** : Ce projet est un prototype fonctionnel en cours d'amélioration, une v1 avait déjà été déployé et une v2 avec plus de capteurs et un meilleur boitier est en cours de réalisation.
-
+⚠️ Warning :  Les algorithmes de calcul (notamment le rapport C/N et les conversions de gaz) sont actuellement des ébauches théoriques. Les vérifications mathématiques et les calibrations physiques (capteurs MQ) n'ont pas encore été faites! 
 Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et propose une expérience gamifiée pour comprendre les processus biologiques de décomposition.
 
 ## 📂 Structure du Projet

@@ -48,7 +48,6 @@ L'objectif est de fusionner la rigueur scientifique (mesures précises, corréla
 
 ## 📅 Roadmap & Améliorations Futures
 
-- [ ] **Data Intégration** : Connecter le Frontend au Backend réel (en cours).
 - [ ] **Graphismes** : Améliorer la qualité des sprites (vers, déchets, minéraux) et ajouter plus de variété.
 - [ ] **Pédagogie** : Enrichir le contenu de l'onglet "Comprendre" avec des quiz ou des guides interactifs.
 - [ ] **ML/IA** : Affiner le modèle de prédiction pour qu'il soit plus pertinent avec de vraies données.

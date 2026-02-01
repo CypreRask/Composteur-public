@@ -37,10 +37,17 @@ Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et 
 
 ## 📸 Galerie
 
-| Interface Gamifiée | Labo de Monitoring |
+### Interface & Monitoring
+| Vue Surface | Tableau de Bord |
 |:---:|:---:|
 | ![Vue Surface](assets/interface.png) | ![Tableau de Bord](assets/dashboard.png) |
 | *L'arbre reflète la santé du système* | *Analyse précise des données* |
+
+### Hardware & Installation
+| Boîtier de Mesure | Installation Électrique |
+|:---:|:---:|
+| ![Boitier](assets/case.png) | ![Câblage](assets/wiring.png) |
+| *Intégration sur site* | *Gestion solaire & capteurs* |
 
 ## 🛠️ Stack Technique
 
@@ -49,4 +56,4 @@ Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et 
 - **Hardware** : ESP32, LoRaWAN, Capteurs NPK & Gaz.
 
 ---
-*Projet réalisé dans le cadre d'un cursus universitaire.*
+*Projet réalisé pour la Mission Éco-Responsable.*

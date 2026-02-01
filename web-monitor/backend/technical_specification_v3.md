@@ -3,7 +3,7 @@
 **Projet :** Smart Compost Monitor
 **Date :** 1 Février 2026
 **Statut :** Cadre Conceptuel
-**Référence :** Recherche Interne "Kimi-V3"
+**Référence :** Recherche Interne "V3-Hybrid"
 
 ---
 

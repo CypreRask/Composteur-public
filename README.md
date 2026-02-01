@@ -47,7 +47,7 @@ Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et 
 | Boîtier de Mesure (V1) | Test Terrain (Solaire) |
 |:---:|:---:|
 | ![Boitier](assets/case.jpg) | ![Câblage](assets/wiring.jpg) |
-| *Câblage initial pour collecte de données* | *Déploiement "Mission Éco-resp" pour validation* |
+| *Câblage initial pour collecte de données* | *Déploiement "Test électrique outdoor|
 
 ## 🛠️ Stack Technique
 

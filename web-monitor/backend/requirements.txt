@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlmodel
+paho-mqtt
+python-dotenv
+pydantic
+requests
+httpx
+scikit-learn
+pandas
+joblib

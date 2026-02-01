@@ -1,0 +1,33 @@
+/* CSS PIXEL ICONS */
+.pixel-icon-n {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    box-shadow:
+        4px 4px 0 #10B981, 8px 4px 0 #10B981, 12px 4px 0 #10B981, 16px 4px 0 #10B981,
+        4px 8px 0 #10B981, 16px 8px 0 #10B981,
+        4px 12px 0 #10B981, 8px 12px 0 #10B981, 16px 12px 0 #10B981,
+        4px 16px 0 #10B981, 12px 16px 0 #10B981, 16px 16px 0 #10B981;
+}
+
+.pixel-icon-p {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    box-shadow:
+        4px 4px 0 #F59E0B, 8px 4px 0 #F59E0B, 12px 4px 0 #F59E0B,
+        4px 8px 0 #F59E0B, 16px 8px 0 #F59E0B,
+        4px 12px 0 #F59E0B, 8px 12px 0 #F59E0B, 12px 12px 0 #F59E0B,
+        4px 16px 0 #F59E0B;
+}
+
+.pixel-icon-k {
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    box-shadow:
+        4px 4px 0 #8B5CF6, 16px 4px 0 #8B5CF6,
+        4px 8px 0 #8B5CF6, 12px 8px 0 #8B5CF6,
+        4px 12px 0 #8B5CF6, 12px 12px 0 #8B5CF6,
+        4px 16px 0 #8B5CF6, 16px 16px 0 #8B5CF6;
+}

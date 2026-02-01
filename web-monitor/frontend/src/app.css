@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+    --color-slate-900: #0f172a;
+    --color-slate-100: #f1f5f9;
+
+    /* Terraria Palette */
+    --color-terra-sky: #84bbf0;
+    --color-terra-grass: #4cd437;
+    --color-terra-dirt: #5d4037;
+    --color-terra-deep: #3e2723;
+    --color-terra-stone: #757575;
+
+    --font-pixel: "Press Start 2P", cursive;
+}
+
+/* App Styles */
+body {
+    @apply bg-terra-deep text-slate-100 font-pixel;
+    image-rendering: pixelated;
+    /* Sharp pixels */
+}
+
+/* Utilities */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.mask-gradient {
+    mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}

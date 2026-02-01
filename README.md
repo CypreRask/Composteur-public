@@ -43,11 +43,11 @@ Ce projet surveille la santé d'un composteur (Température, Humidité, NPK) et 
 | ![Vue Surface](assets/interface.png) | ![Tableau de Bord](assets/dashboard.png) |
 | *L'arbre reflète la santé du système* | *Analyse précise des données* |
 
-### Hardware & Installation
-| Boîtier de Mesure | Installation Électrique |
+### Hardware & Installation (Prototype V1)
+| Boîtier de Mesure (V1) | Test Terrain (Solaire) |
 |:---:|:---:|
-| ![Boitier](assets/case.png) | ![Câblage](assets/wiring.png) |
-| *Intégration sur site* | *Gestion solaire & capteurs* |
+| ![Boitier](assets/case.jpg) | ![Câblage](assets/wiring.jpg) |
+| *Câblage initial pour collecte de données* | *Déploiement "Mission Éco-resp" pour validation* |
 
 ## 🛠️ Stack Technique
 

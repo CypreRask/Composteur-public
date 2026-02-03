@@ -43,6 +43,13 @@ def on_startup():
             latest = session.exec(select(CompostMeasure).order_by(CompostMeasure.timestamp.desc()).limit(1)).first()
             print(f"[OK] Latest Entry ID: {latest.id if latest else 'None'}")
 
+# --- CACHE GLOBAL ---
+# (Simple in-memory cache for the single worker process)
+last_analysis_cache = {
+    "timestamp": None,
+    "result": None
+}
+
 @app.get("/api/latest", response_model=CompostMeasure)
 def get_latest_measure(session: Session = Depends(get_session)):
     statement = select(CompostMeasure).order_by(CompostMeasure.timestamp.desc()).limit(1)
@@ -50,18 +57,28 @@ def get_latest_measure(session: Session = Depends(get_session)):
     if not result:
         raise HTTPException(status_code=404, detail="No data found")
     
-    # --- HEURISTIC ANALYSIS (On-the-fly) ---
-    # Fetch last 48h of data for context
-    # (In prod this should be cached or async)
-    history_query = select(CompostMeasure).order_by(CompostMeasure.timestamp.desc()).limit(200) # Enough for 24h
-    history_data = session.exec(history_query).all()
-    
+    # --- HEURISTIC ANALYSIS (Cached) ---
     analysis = None
-    if history_data:
-        # Convert to Pandas
-        df = pd.DataFrame([h.dict() for h in history_data])
-        df['timestamp'] = pd.to_datetime(df['timestamp'])
-        analysis = analyze_dataframe(df)
+    
+    # Check cache validity
+    if (last_analysis_cache["timestamp"] == result.timestamp) and (last_analysis_cache["result"] is not None):
+        analysis = last_analysis_cache["result"]
+    else:
+        # Re-compute if new data
+        history_query = select(CompostMeasure).order_by(CompostMeasure.timestamp.desc()).limit(200) 
+        history_data = session.exec(history_query).all()
+        
+        if history_data:
+            df = pd.DataFrame([h.dict() for h in history_data])
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            try:
+                analysis = analyze_dataframe(df)
+                # Update Cache
+                last_analysis_cache["timestamp"] = result.timestamp
+                last_analysis_cache["result"] = analysis
+            except Exception as e:
+                print(f"[ERR] Analysis failed: {e}")
+                analysis = None
 
     response_dict = result.dict()
     if analysis:

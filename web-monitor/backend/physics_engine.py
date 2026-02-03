@@ -28,15 +28,21 @@ class CompostState:
     def estimate_airflow(self, temp_compost, temp_air):
         """
         Estimates airflow through PTFE membrane driven by thermal convection.
-        Q_air = Base_Diffusion + k * (T_compost - T_air)
+        Q_air = Base_Diffusion + k * sqrt(T_compost - T_air)
+        Natural convection follows a power law (or sqrt), not linear.
         """
         delta_t = max(0, temp_compost - temp_air)
-        return self.BASE_FLOW_M3H + (self.CONVECTION_COEFF * delta_t)
+        # Sqrt better modles natural convection (chimney effect)
+        # Coeff adapted to keep roughly same magnitude at dt=40 (~6.3 * 0.01 = 0.06)
+        # Old linear: 0.05 + 0.01 * 40 = 0.45 m3/h
+        # New sqrt: 0.05 + 0.06 * 6.3 = 0.43 m3/h
+        CONV_COEFF_SQRT = 0.06 
+        return self.BASE_FLOW_M3H + (CONV_COEFF_SQRT * np.sqrt(delta_t))
 
     def update(self, current_time, measures, temp_air=20.0):
         """
         Updates the mass balance based on sensor readings and estimated airflow.
-        measures: dict with keys 'co2' (ppm), 'nh3' (ppm), 'mq4' (raw->ppm approx), 'temp_scd'
+        measures: dict with keys 'co2' (ppm), 'mq137' (raw ADC), 'mq4' (raw ADC), 'temp_scd'
         """
         dt_seconds = (current_time - self.last_update).total_seconds()
         dt_hours = dt_seconds / 3600.0
@@ -47,10 +53,18 @@ class CompostState:
         # 1. Estimate Flow
         q_air = self.estimate_airflow(measures.get('temp_scd', 20), temp_air)
         
-        # 2. Gas Concentrations (ppm to vol fraction)
+        # 2. Gas Concentrations (CRITICAL: Convert ADC to pseudo-PPM)
+        # Default scaling: 1/10 roughly maps 2000 ADC -> 200 PPM.
+        # This is temporary until real calibration (Rs/Ro).
         co2_vol = measures.get('co2', 400) * 1e-6
-        nh3_vol = measures.get('mq137', 0) * 1e-6 # Assuming calibrated ppm
-        ch4_vol = measures.get('mq4', 0) * 1e-6   # Assuming calibrated ppm
+        
+        mq137_raw = measures.get('mq137', 0)
+        nh3_ppm = mq137_raw * 0.1 # <--- CALIBRATION STUB
+        nh3_vol = nh3_ppm * 1e-6 
+        
+        mq4_raw = measures.get('mq4', 0)
+        ch4_ppm = mq4_raw * 0.1 # <--- CALIBRATION STUB
+        ch4_vol = ch4_ppm * 1e-6
         
         # 3. Calculate Mass Fluxes (kg/h)
         # Flux = Q_air * Concentration * Density * (MolarMassRatio C or N)
@@ -82,7 +96,7 @@ if __name__ == "__main__":
     print(f"Initial C/N: {compost.get_cn():.2f}")
     
     # Simulate 24h of active composting (Thermophilic 60C)
-    # High CO2 (3000ppm), Some NH3 (10ppm)
+    # High CO2 (3000ppm), Some NH3 (ADC 100 -> ~10ppm)
     for _ in range(24):
         now = datetime.utcnow() # Note: In real sim we'd increment time
         # Mocking time step as 1 hour manually in logic for test
@@ -91,7 +105,7 @@ if __name__ == "__main__":
         cn, flow = compost.update(now, {
             'temp_scd': 60,
             'co2': 3000,
-            'mq137': 10, # NH3
+            'mq137': 100, # NH3 (Raw ADC)
             'mq4': 0
         }, temp_air=15)
         

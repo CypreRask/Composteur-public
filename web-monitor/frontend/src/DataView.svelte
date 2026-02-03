@@ -45,9 +45,15 @@
       return;
     }
 
+    // Use VITE_API_URL from .env or relative path in PROD (Docker/Nginx)
+    // @ts-ignore
+    const API_URL = import.meta.env.PROD
+      ? ""
+      : import.meta.env.VITE_API_URL || "http://localhost:8085";
+
     try {
       const res = await fetch(
-        `http://localhost:8085/api/history/aggregate?interval=${interval}&days=${days}`,
+        `${API_URL}/api/history/aggregate?interval=${interval}&days=${days}`,
       );
       if (res.ok) {
         const raw = await res.json();
@@ -126,8 +132,13 @@
 
   async function fetchForecast() {
     if (!data || data.length < 1) return;
+    // @ts-ignore
+    const API_URL = import.meta.env.PROD
+      ? ""
+      : import.meta.env.VITE_API_URL || "http://localhost:8085";
+
     try {
-      const res = await fetch("http://localhost:8085/api/predict", {
+      const res = await fetch(`${API_URL}/api/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

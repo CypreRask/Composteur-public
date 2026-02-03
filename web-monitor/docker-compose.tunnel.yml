@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # Service de Tunneling Cloudflare
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: smart-compost-tunnel
+    restart: unless-stopped
+    command: tunnel --url http://frontend:80
+    depends_on:
+      - frontend
+    # Pas besoin de ports, c'est un tunnel sortant !

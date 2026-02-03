@@ -40,6 +40,7 @@
   let latest = MOCK_DATA;
   let weather = null;
   let history = [];
+  let isOffline = false; // New State for connection status
 
   // --- NAVIGATION STATE ---
   let activeTab = "monitor"; // 'monitor', 'data', 'learn'
@@ -79,23 +80,35 @@
   }
 
   // Fetch Logic (Simplified for brevity)
+  // Use VITE_API_URL from .env or relative path in PROD (Docker/Nginx)
+  // @ts-ignore
+  const API_URL = import.meta.env.PROD
+    ? ""
+    : import.meta.env.VITE_API_URL || "http://localhost:8085";
+
   async function fetchData() {
     try {
-      const res = await fetch("http://localhost:8085/api/latest");
-      if (res.ok) latest = await res.json();
+      const res = await fetch(`${API_URL}/api/latest`);
+      if (res.ok) {
+        latest = await res.json();
+        isOffline = false;
+      } else {
+        isOffline = true;
+      }
     } catch (e) {
       console.log("Backend offline (Latest)");
+      isOffline = true;
     }
 
     try {
-      const resW = await fetch("http://localhost:8085/api/weather");
+      const resW = await fetch(`${API_URL}/api/weather`);
       if (resW.ok) weather = await resW.json();
     } catch (e) {}
   }
 
   async function fetchHistory() {
     try {
-      const res = await fetch("http://localhost:8085/api/history?limit=1000");
+      const res = await fetch(`${API_URL}/api/history?limit=1000`);
       if (res.ok) {
         history = await res.json();
         history.reverse(); // Backend sends DESC, Frontend needs ASC (Oldest -> Newest)
@@ -161,6 +174,15 @@
       </div>
     </div>
   </div>
+
+  <!-- OFFLINE BANNER -->
+  {#if isOffline}
+    <div
+      class="bg-red-600 text-white text-center text-xs font-bold py-1 animate-pulse z-[60]"
+    >
+      ⚠️ CONTROLEUR HORS LIGNE - DONNÉES OBSOLÈTES (MODE DÉMO)
+    </div>
+  {/if}
 
   <!-- CONTENT AREA -->
   {#if activeTab === "monitor"}

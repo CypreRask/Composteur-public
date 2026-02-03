@@ -26,10 +26,21 @@ build/
 *.hex
 
 # OS
-Thumbs.db
-
 # Database & Logs
 *.db
 *.sqlite
 *.sqlite3
 *.log
+*.csv
+data/
+
+# Environment Variables (CRITICAL)
+.env
+.env.*
+!.env.example
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

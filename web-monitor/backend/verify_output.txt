@@ -1,0 +1,31 @@
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:51: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=200, freq="1H")
+Starting Algorithm Verification...
+
+--- Running Test: Ideal Active Compost ---
+OUTPUT: Score=87.90, Gate=4, Trend=INDETERMINATE
+DETAILS: R1=0.0049, R2=0.0052, EC_Norm=1.06, dCO2=8.68
+CHECK Score is Healthy (>30): PASS
+CHECK Gate is OK (0): FAIL
+
+--- Running Test: Anaerobic Condition ---
+OUTPUT: Score=87.10, Gate=4, Trend=INDETERMINATE
+DETAILS: R1=0.0049, R2=0.1972, EC_Norm=1.06, dCO2=8.68
+CHECK Gate is ANAEROBIC (2): FAIL
+CHECK Score is ignored/penalized: PASS
+
+--- Running Test: Inactive Condition ---
+OUTPUT: Score=100.00, Gate=3, Trend=INDETERMINATE
+DETAILS: R1=0.0114, R2=0.0121, EC_Norm=1.06, dCO2=0.00
+CHECK Gate is INACTIVE (3): PASS
+
+--- Running Test: Mature Condition ---
+OUTPUT: Score=0.00, Gate=3, Trend=INDETERMINATE
+DETAILS: R1=0.0083, R2=0.0088, EC_Norm=0.00, dCO2=-90.45
+CHECK Gate is MATURE (1): FAIL
+
+--- Running Test: Zero Inputs ---
+OUTPUT: Score=50.00, Gate=3, Trend=INDETERMINATE
+DETAILS: R1=0.0000, R2=0.0000, EC_Norm=0.00, dCO2=0.00
+CHECK Does not crash: PASS
+CHECK Ratios valid (EPSILON handled): PASS

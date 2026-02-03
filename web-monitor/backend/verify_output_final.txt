@@ -1,0 +1,40 @@
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:48: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=hours, freq="1H")
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:48: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=hours, freq="1H")
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:48: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=hours, freq="1H")
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:48: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=hours, freq="1H")
+D:\composteur\smart-compost-public\web-monitor\backend\verify_algo.py:48: FutureWarning: 'H' is deprecated and will be removed in a future version, please use 'h' instead.
+  timestamps = pd.date_range(start="2023-01-01", periods=hours, freq="1H")
+Starting Algorithm Verification (Dynamic Signals)...
+
+--- Running Test: Ideal Active Compost ---
+OUTPUT: Score=36.10, Gate=0, Trend=CN_OPTIMAL
+DETAILS: R1=0.0047, R2=0.0053, EC_Norm=1.06, dCO2=-1.93, CO2=992
+CHECK Score is Healthy (>30): PASS
+CHECK Gate is OK (0): PASS
+
+--- Running Test: Anaerobic Step Change ---
+OUTPUT: Score=100.00, Gate=2, Trend=INDETERMINATE
+DETAILS: R1=0.0049, R2=0.2450, EC_Norm=1.06, dCO2=16.34, CO2=995
+CHECK Gate is ANAEROBIC (2): PASS
+CHECK Gate Active is True: PASS
+
+--- Running Test: Inactive Fade ---
+OUTPUT: Score=32.80, Gate=3, Trend=INDETERMINATE
+DETAILS: R1=0.0119, R2=0.0113, EC_Norm=1.06, dCO2=-6.43, CO2=424
+CHECK Gate is INACTIVE (3): PASS
+
+--- Running Test: Mature Condition ---
+OUTPUT: Score=0.00, Gate=1, Trend=INDETERMINATE
+DETAILS: R1=0.0059, R2=0.0055, EC_Norm=1.06, dCO2=-323.17, CO2=854
+CHECK Gate is MATURE (1): PASS
+CHECK Gate is NOT Inactive: PASS
+
+--- Running Test: Zero Inputs ---
+OUTPUT: Score=50.00, Gate=3, Trend=INDETERMINATE
+DETAILS: R1=0.0000, R2=0.0000, EC_Norm=0.00, dCO2=0.00, CO2=0
+CHECK Does not crash: PASS
+CHECK Ratios valid (EPSILON handled): PASS

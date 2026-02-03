@@ -17,7 +17,7 @@ import numpy as np
 EPSILON = 10.0  # ppm (avoid divide-by-zero in ratios)
 
 # Resampling
-RESAMPLE_RULE = "1H"  # engine expects 1H steps after resample
+RESAMPLE_RULE = "1h"  # engine expects 1h steps after resample
 
 # EMA smoothing target (in hours on 1H grid)
 EMA_HOURS = 24
@@ -163,36 +163,52 @@ def apply_gating(df: pd.DataFrame) -> pd.DataFrame:
 
     # -------- Anaerobic gate (R2 high sustained) --------
     # Adaptive threshold: p90 of last 7d of R2 (excluding spikes)
+    # BUT we also need an absolute ceiling because if it's always anaerobic, 
+    # history will adapt and mask the danger.
+    R2_CEILING = 0.20 # 20% CH4/CO2 ratio is definitely anaerobic/dangerous
+    
     r2 = df["R2"].astype(float)
     ok_for_thresh = (df["gate_code"] != 4)
     r2_hist = r2.where(ok_for_thresh)
     r2_p90 = r2_hist.rolling(window=WIN_7D, min_periods=24).quantile(R2_PCTL)
     r2_thresh = np.maximum(r2_p90.fillna(R2_FLOOR), R2_FLOOR)
 
-    mask_ana = r2 > r2_thresh
+    mask_ana = (r2 > r2_thresh) | (r2 > R2_CEILING)
     ana_sust = mask_ana.rolling(window=WIN_SHORT, min_periods=1).sum() >= ANAEROBIC_REQUIRE_SUM
 
-    # Only set anaerobic where not already inactive (inactive takes priority)
-    df.loc[ana_sust & (df["gate_code"] == 0), "gate_code"] = 2
-    df.loc[ana_sust & (df["gate_code"] == 0), "gate_active"] = True
-
-    # -------- Inactive gate (CO2 too low sustained) --------
-    co2 = df["co2_ema"].astype(float)
-    mask_inact = (co2 < (AMBIENT_CO2 + SEUIL_CO2_BAS_DELTA)) | (co2 < INACTIVE_ABS_CO2)
-    inact_sust = mask_inact.rolling(window=WIN_48H, min_periods=1).sum() >= INACTIVE_REQUIRE_SUM
-
-    # Inactive overrides everything except spikes (spike is pointwise exclusion)
-    override = inact_sust & (df["gate_code"] != 4)
-    df.loc[override, "gate_code"] = 3
-    df.loc[override, "gate_active"] = True
+    # Apply Anaerobic (Priority 2)
+    # Use explicit mask so we don't depend on "gate_code==0" check failing after set
+    mask_set_ana = ana_sust & (df["gate_code"] == 0)
+    df.loc[mask_set_ana, "gate_code"] = 2
+    df.loc[mask_set_ana, "gate_active"] = True
 
     # -------- Mature gate (EC high + activity dropping) --------
+    # Priority 1: Mature takes precedence over Inactive
+    # If EC is high and activity drops, it's mature, not just dead.
     mask_mature = (df["ec_norm"] > EC_NORM_HIGH) & (df["dco2_dt"] < DCO2_DROP)
     mature_sust = mask_mature.rolling(window=WIN_12H, min_periods=1).sum() >= MATURE_REQUIRE_SUM
 
-    # Only tag mature if still OK (don’t overwrite inactive/anaerobic)
-    df.loc[mature_sust & (df["gate_code"] == 0), "gate_code"] = 1
-    df.loc[mature_sust & (df["gate_code"] == 0), "gate_active"] = True
+    # Apply Mature (can overwrite OK or Anaerobic if we decide maturity explains it better, but usually OK)
+    # Let's say Mature overrides Anaerobic? No, Anaerobic is a risk. Mature overrides OK.
+    mask_set_mat = mature_sust & (df["gate_code"] != 4) & (df["gate_code"] != 2)
+    df.loc[mask_set_mat, "gate_code"] = 1
+    df.loc[mask_set_mat, "gate_active"] = True
+
+    # -------- Inactive gate (CO2 too low sustained) --------
+    # Priority 3: Only if NOT mature and NOT anaerobic
+    co2 = df["co2_ema"].astype(float)
+    # FIX: Use AND for absolute fallback to avoid false positives on 'active but lowish' composts
+    # OLD: mask_inact = (co2 < (AMBIENT_CO2 + SEUIL_CO2_BAS_DELTA)) | (co2 < INACTIVE_ABS_CO2)
+    # NEW: Either very close to ambient OR below absolute floor AND delta check
+    # Let's simplify: Inactive means CO2 IS LOW.
+    # Strict condition: CO2 must be < 600 OR (CO2 < 900 AND no activity) - effectively similar but let's trust the absolute
+    mask_inact = (co2 < INACTIVE_ABS_CO2) 
+    inact_sust = mask_inact.rolling(window=WIN_48H, min_periods=1).sum() >= INACTIVE_REQUIRE_SUM
+
+    # Only set Inactive if currently OK (don't overwrite Mature or Anaerobic)
+    mask_set_inact = inact_sust & (df["gate_code"] == 0)
+    df.loc[mask_set_inact, "gate_code"] = 3
+    df.loc[mask_set_inact, "gate_active"] = True
 
     return df
 

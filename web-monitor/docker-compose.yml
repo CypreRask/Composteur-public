@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: smart-compost-backend
+    restart: always
+    environment:
+      - DATABASE_URL=sqlite:////data/compost.db
+      - TTN_BROKER=${TTN_BROKER}
+      - TTN_APP_ID=${TTN_APP_ID}
+      - TTN_API_KEY=${TTN_API_KEY}
+    volumes:
+      - compost_data:/data
+    ports:
+      - "8085:8085"
+
+  frontend:
+    build: ./frontend
+    container_name: smart-compost-frontend
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  compost_data:

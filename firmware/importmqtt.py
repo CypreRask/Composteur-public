@@ -11,10 +11,10 @@ from datetime import datetime
 TTN_SERVER = "eu1.cloud.thethings.network"
 TTN_PORT = 1883
 TTN_APP_ID = "votre-app-id"
-TTN_API_KEY = "NNSXS.VOTRE_CLÉ_API_ICI.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+TTN_API_KEY = "NNSXS.VOTRE_KEY_ICI"
 
 # === CONFIG OpenWeatherMap (Nice centre) ===
-OWM_API_KEY = "votre_clé_api_openweathermap"
+OWM_API_KEY = "votre_api_key"
 LATITUDE = 43.7102
 LONGITUDE = 7.2620
 

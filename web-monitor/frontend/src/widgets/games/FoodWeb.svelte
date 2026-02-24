@@ -359,6 +359,9 @@
                     on:touchstart={(e) => startDrag(node, e)}
                     on:mouseenter={() => (hoveredNodeId = node.id)}
                     on:mouseleave={() => (hoveredNodeId = null)}
+                    role="button"
+                    tabindex="0"
+                    aria-label={node.label}
                 >
                     <div class="text-xl pointer-events-none select-none">
                         {node.icon}

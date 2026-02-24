@@ -13,7 +13,7 @@
 <!-- The Foliage Click Area -->
 <!-- Centered relative to the parent flex col -->
 <div
-    class="relative w-[300px] h-[250px] -mb-16 z-50 flex items-center justify-center transition-transform hover:scale-105 cursor-pointer origin-center"
+    class="relative w-[300px] h-[250px] -mb-16 z-50 flex items-center justify-center transition-transform hover:scale-105 cursor-magnify origin-center"
     on:click={() => dispatch("openPhotosynthesis")}
     on:keydown={(e) => e.key === "Enter" && dispatch("openPhotosynthesis")}
     role="button"

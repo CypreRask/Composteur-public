@@ -18,7 +18,7 @@
         },
         {
             title: "3. Le Courant de Masse 🌊",
-            text: "L'eau du Xylème passe dans le Phloème (Osmose). La pression pousse le tout vers le bas.",
+            text: "Le sucre concentre attire l'eau par osmose. Cette pression hydrostatique pousse la seve elaboree vers le bas dans le Phloeme.",
             action: "Cliquez pour déclencher le flux !",
             animClass: "animate-flow-down",
         },
@@ -54,9 +54,9 @@
 
     <!-- SCHEMATIC SCENE -->
     <div
-        class="relative flex-grow bg-[#5D4037] border-4 border-[#3E2723] rounded-lg overflow-hidden shadow-inner mb-2 group cursor-pointer w-full text-left"
+        class="relative flex-grow bg-[#5D4037] border-4 border-[#3E2723] rounded-lg overflow-hidden shadow-inner mb-2 group cursor-magnify w-full text-left"
         on:click={nextStep}
-        on:keydown={(e) => e.key === 'Enter' && nextStep()}
+        on:keydown={(e) => e.key === "Enter" && nextStep()}
         role="button"
         tabindex="0"
         aria-label="Passer à l'étape suivante"
@@ -367,7 +367,7 @@
 
         <!-- Next Pulse -->
         <div
-            class="absolute bottom-4 right-4 animate-bounce text-white cursor-pointer z-20"
+            class="absolute bottom-4 right-4 animate-bounce text-white cursor-magnify z-20"
         >
             ▶
         </div>

@@ -13,7 +13,7 @@
 
 <!-- METAL PROBE (Spike) -->
 <div
-    class="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col items-center z-20 group cursor-help font-pixel"
+    class="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col items-center z-20 group cursor-magnify font-pixel"
 >
     <!-- HEAD (Digital Display) -->
     <div

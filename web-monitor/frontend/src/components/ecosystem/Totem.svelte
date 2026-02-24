@@ -100,7 +100,7 @@
 
     <!-- Canopy Zone -->
     <div
-        class="absolute top-0 left-0 w-full h-[40%] cursor-pointer group/canopy hover:bg-white/5 z-50"
+        class="absolute top-0 left-0 w-full h-[40%] cursor-magnify group/canopy hover:bg-white/5 z-50"
         on:click={() => handleClick("foliage")}
         on:keydown={(e) => e.key === "Enter" && handleClick("foliage")}
         role="button"
@@ -115,7 +115,7 @@
 
     <!-- Trunk Zone -->
     <div
-        class="absolute top-[40%] left-0 w-full h-[30%] cursor-pointer group/trunk hover:bg-white/5 z-50"
+        class="absolute top-[40%] left-0 w-full h-[30%] cursor-magnify group/trunk hover:bg-white/5 z-50"
         on:click={() => handleClick("trunk")}
         on:keydown={(e) => e.key === "Enter" && handleClick("trunk")}
         role="button"
@@ -130,7 +130,7 @@
 
     <!-- Roots Zone -->
     <div
-        class="absolute bottom-0 left-0 w-full h-[30%] cursor-pointer group/roots hover:bg-white/5 z-50"
+        class="absolute bottom-0 left-0 w-full h-[30%] cursor-magnify group/roots hover:bg-white/5 z-50"
         on:click={() => handleClick("roots")}
         on:keydown={(e) => e.key === "Enter" && handleClick("roots")}
         role="button"

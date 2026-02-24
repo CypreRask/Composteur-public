@@ -13,7 +13,7 @@
         },
         {
             title: "2. L'Arbuscule (L'Arbre Intérieur) 🌳",
-            text: "Le champignon se divise à l'infini DANS la cellule pour former un 'petit arbre' (Arbuscule).",
+            text: "Le champignon se ramifie DANS la cellule pour former un 'petit arbre' (Arbuscule). La surface d'échange est immense.",
             action: "Cliquez pour déployer l'arbuscule !",
         },
         {
@@ -43,7 +43,7 @@
         class="flex justify-between items-center mb-2 border-b-2 border-white/20 pb-2"
     >
         <h2 class="text-xl text-cyan-400 drop-shadow-md">
-            🍄 Endomycorhize (C4)
+            🍄 Endomycorhize (AMF)
         </h2>
         <div class="text-xs bg-white/20 px-2 py-1 rounded">
             Étape {step + 1}/{steps.length}
@@ -84,9 +84,9 @@
 
                 {#if step === 0}
                     <div
-                        class="absolute -right-8 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full border-2 border-cyan-400 animate-ping opacity-50 cursor-pointer z-50"
+                        class="absolute -right-8 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full border-2 border-cyan-400 animate-ping opacity-50 cursor-magnify z-50"
                         on:click={nextStep}
-                        on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                        on:keydown={(e) => e.key === "Enter" && nextStep()}
                         role="button"
                         tabindex="0"
                     ></div>
@@ -108,7 +108,7 @@
 
                 <!-- THE ARBUSCULE (Fractal Tree) -->
                 {#if step >= 2}
-                    <g class="absolute left-10 top-1/2 -translate-y-1/2">
+                    <div class="absolute left-10 top-1/2 -translate-y-1/2">
                         <!-- Upper Branch -->
                         <div
                             class="absolute bottom-0 left-0 w-1 h-12 bg-cyan-400 origin-bottom -rotate-45 animate-grow-branch"
@@ -140,16 +140,17 @@
 
                         {#if step === 2}
                             <div
-                                class="absolute left-20 top-0 w-8 h-8 rounded-full border-2 border-yellow-400 animate-bounce cursor-pointer z-50 flex items-center justify-center text-[8px]"
+                                class="absolute left-20 top-0 w-8 h-8 rounded-full border-2 border-yellow-400 animate-bounce cursor-magnify z-50 flex items-center justify-center text-[8px]"
                                 on:click={nextStep}
-                                on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                                on:keydown={(e) =>
+                                    e.key === "Enter" && nextStep()}
                                 role="button"
                                 tabindex="0"
                             >
                                 🔁
                             </div>
                         {/if}
-                    </g>
+                    </div>
                 {/if}
             {/if}
 
@@ -185,9 +186,9 @@
 
                 {#if step === 3}
                     <div
-                        class="absolute right-4 bottom-4 w-8 h-8 bg-green-600 border border-white animate-bounce cursor-pointer z-50 flex items-center justify-center text-xs"
+                        class="absolute right-4 bottom-4 w-8 h-8 bg-green-600 border border-white animate-bounce cursor-magnify z-50 flex items-center justify-center text-xs"
                         on:click={nextStep}
-                        on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                        on:keydown={(e) => e.key === "Enter" && nextStep()}
                         role="button"
                         tabindex="0"
                     >

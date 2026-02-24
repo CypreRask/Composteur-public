@@ -17,7 +17,7 @@
 </script>
 
 <div
-    class="relative w-56 h-64 group cursor-zoom-in hover:scale-[1.02] transition-transform font-pixel select-none"
+    class="relative w-56 h-64 group cursor-magnify hover:scale-[1.02] transition-transform font-pixel select-none"
     on:click={() => dispatch("click")}
     on:keydown={(e) => e.key === "Enter" && dispatch("click")}
     role="button"
@@ -106,7 +106,7 @@
             >
                 <!-- META: SENSOR BOX (Square) -->
                 <div
-                    class="absolute top-0 right-1/2 translate-x-1/2 w-10 h-6 bg-blue-700 border-2 border-blue-900 border-t-0 z-50 flex items-center justify-center shadow-lg group/sensor cursor-help hover:bg-blue-600 transition-colors"
+                    class="absolute top-0 right-1/2 translate-x-1/2 w-10 h-6 bg-blue-700 border-2 border-blue-900 border-t-0 z-50 flex items-center justify-center shadow-lg group/sensor cursor-magnify hover:bg-blue-600 transition-colors"
                     on:click|stopPropagation={() => dispatch("openHardware")}
                     on:keydown={(e) =>
                         e.key === "Enter" && dispatch("openHardware")}

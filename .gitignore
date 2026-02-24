@@ -6,13 +6,12 @@ __pycache__/
 .Python
 env/
 venv/
-.env
+.venv/
 
 # JavaScript/Node
 node_modules/
 npm-debug.log
 yarn-error.log
-.DS_Store
 dist/
 build/
 
@@ -25,22 +24,30 @@ build/
 *.bin
 *.hex
 
-# OS
-# Database & Logs
-*.db
-*.sqlite
-*.sqlite3
-*.log
-*.csv
-data/
-
-# Environment Variables (CRITICAL)
+# Secrets & Environment Variables (CRITICAL)
 .env
 .env.*
 !.env.example
+secrets.h
 
-# OS / Editor
+# Database & State
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.pkl
+data/
+
+# Logs & Debug Output
+*.log
+*.csv
+*.txt
+!README.txt
+
+# Generated plots
+plots/
+
+# OS
 .DS_Store
 Thumbs.db
-.vscode/
-.idea/

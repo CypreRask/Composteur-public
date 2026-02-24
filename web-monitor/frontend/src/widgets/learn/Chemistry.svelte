@@ -52,7 +52,7 @@
         {
             formula: "NH₃",
             name: "Ammoniac",
-            desc: "L'odeur d'oeuf pourri/pipi ! Trop d'azote qui s'échappe.",
+            desc: "L'odeur piquante d'urine ! Trop d'azote qui s'échappe en gaz. (L'oeuf pourri, c'est H₂S.)",
             icon: "🟡",
         },
         {
@@ -204,7 +204,7 @@
             <div class="flex flex-col gap-2 p-2 overflow-y-auto h-full">
                 {#each MOLECULES as mol}
                     <div
-                        class="flex items-center gap-3 bg-black/20 p-2 rounded border border-gray-700 hover:bg-white/5 cursor-help transition-colors"
+                        class="flex items-center gap-3 bg-black/20 p-2 rounded border border-gray-700 hover:bg-white/5 cursor-magnify transition-colors"
                         title={mol.desc}
                     >
                         <div class="text-2xl">{mol.icon}</div>

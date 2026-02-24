@@ -13,22 +13,22 @@ class CompostMeasure(SQLModel, table=True):
     mq7: int
     
     # SCD41 (CO2 + Env)
-    co2: int = Field(ge=0, le=10000)      # Max 10.000 ppm
-    temp_scd: float = Field(ge=-20, le=100) # -20 to 100°C
-    hum_scd: float = Field(ge=0, le=100)    # 0-100%
+    co2: int
+    temp_scd: float
+    hum_scd: float
     
     # AHT20 (Env)
-    temp_aht: float = Field(ge=-20, le=100)
-    hum_aht: float = Field(ge=0, le=100)
+    temp_aht: float
+    hum_aht: float
     
     # NPK Sensor
-    soil_hum: float = Field(ge=0, le=100)
-    soil_temp: float = Field(ge=-20, le=100)
-    soil_ec: int = Field(ge=0, le=20000) # Max 20k us/cm
-    soil_ph: float = Field(ge=0, le=14)  # pH 0-14
-    soil_n: int = Field(ge=0, le=3000)   # Max 3000 mg/kg
-    soil_p: int = Field(ge=0, le=3000)
-    soil_k: int = Field(ge=0, le=3000)
+    soil_hum: float
+    soil_temp: float
+    soil_ec: int
+    soil_ph: float
+    soil_n: int
+    soil_p: int
+    soil_k: int
     
     # Metadata
     rssi: Optional[int] = None

@@ -47,6 +47,7 @@
             {soil_hum}
             on:openRoots={() => dispatch("openRoots")}
             on:openSymbiosisC4={() => dispatch("openSymbiosisC4")}
+            on:openCAM={() => dispatch("openCAM")}
         />
     </div>
 </div>

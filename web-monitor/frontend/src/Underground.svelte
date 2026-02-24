@@ -306,7 +306,7 @@
 
         <!-- LEACHING LESSON (Tooltip floating) -->
         <div
-            class="absolute top-4 right-4 z-50 cursor-pointer animate-bounce"
+            class="absolute top-4 right-4 z-50 cursor-magnify animate-bounce"
             on:click={() => openDetail("leaching")}
             on:keydown={(e) => e.key === "Enter" && openDetail("leaching")}
             role="button"
@@ -334,7 +334,7 @@
     {/each}
     <!-- Big Roots (CSS Art) - Clickable for Symbiosis -->
     <div
-        class="absolute top-0 left-10 w-4 h-32 cursor-pointer z-20 group/root"
+        class="absolute top-0 left-10 w-4 h-32 cursor-magnify z-20 group/root"
         on:click={() => openDetail("symbiosis")}
         on:keydown={(e) => e.key === "Enter" && openDetail("symbiosis")}
         role="button"
@@ -364,7 +364,7 @@
     {#each items as item}
         {@const type = getItemType(item.type)}
         <div
-            class="absolute group/item cursor-pointer transition-transform hover:scale-125 z-10"
+            class="absolute group/item cursor-magnify transition-transform hover:scale-125 z-10"
             style="left: {item.left}%; top: {item.top}%; transform: scale({item.scale *
                 2});"
             on:click={() => openDetail(type)}
@@ -420,7 +420,7 @@
     {#if lifeDensity !== "frozen"}
         {#each activeWorms as worm}
             <div
-                class="absolute z-20 cursor-pointer hover:z-50 group/worm"
+                class="absolute z-20 cursor-magnify hover:z-50 group/worm"
                 on:click={() => openDetail(worm.type)}
                 on:keydown={(e) => e.key === "Enter" && openDetail(worm.type)}
                 role="button"
@@ -483,7 +483,7 @@
 
         <!-- RONGEUR (Mulot / Campagnol) - SPRITE PIXEL ART -->
         <div
-            class="absolute bottom-0 left-20 z-40 transition-transform duration-1000 ease-out cursor-help group/rodent"
+            class="absolute bottom-0 left-20 z-40 transition-transform duration-1000 ease-out cursor-magnify group/rodent"
             style="transform: translateY({showRodent ? '0%' : '100%'});"
             role="button"
             tabindex="0"

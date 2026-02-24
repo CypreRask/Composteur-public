@@ -15,7 +15,7 @@ C'est un processus **naturel** : dans la forêt, les feuilles mortes se décompo
 
 ### Pourquoi c'est génial ?
 *   🗑️ **Moins de poubelle** : 30% de nos déchets sont compostables.
-*   🌍 **Moins de pollution** : On évite de brûler de l'eau (les épluchures, c'est de l'eau !).
+*   🌍 **Moins de pollution** : On évite d'incinérer des déchets qui sont à 80% de l'eau (gaspillage d'énergie !).
 *   🌱 **Engrais gratuit** : Tu fabriques un terreau riche pour tes plantes.
         `,
         xp: 10,
@@ -56,9 +56,9 @@ Pour que ça marche, il faut mélanger deux ingrédients clés :
 *   **Rôle** : Apporter de l'air et servir d'abri.
 
 ### ⚠️ La Règle d'Or
-**50% Verts + 50% Bruns = Compost Parfait**
-*   Trop de Verts ? 🤢 Ça pue et ça coule (pas assez d'air).
-*   Trop de Bruns ? 🌵 C'est sec et rien ne se passe.
+**1 part de Verts + 2 à 3 parts de Bruns = Compost Parfait** (en volume)
+*   Trop de Verts ? 🤢 Ça pue et ça coule (excès d'azote, pas assez d'air).
+*   Trop de Bruns ? 🌵 C'est sec et rien ne se passe (excès de carbone).
         `,
         xp: 20
     },

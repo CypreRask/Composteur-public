@@ -1,7 +1,7 @@
 <script>
     export let data = null;
     export let weather = null;
-    export let fluxState = null;
+    // fluxState removed as unnecessary export
 
     // Safe Data
     $: safeData = data || {
@@ -43,8 +43,9 @@
         isOpen = !isOpen;
     }
 
-    import CompostCabin from "./components/ecosystem/CompostCabin.svelte"; // NEW
-    import SmartTree from "./components/ecosystem/tree/SmartTree.svelte"; // Phase 6
+    import CompostCabin from "./components/ecosystem/CompostCabin.svelte";
+    import SmartTree from "./components/ecosystem/tree/SmartTree.svelte";
+    import CornPlant from "./components/ecosystem/CornPlant.svelte";
 
     // --- PROCEDURAL GENERATION ---
     const leafPiles = Array.from({ length: 5 }).map(() => ({
@@ -61,53 +62,58 @@
     <div
         class="relative z-30 w-full max-w-6xl flex items-end justify-center gap-8 md:gap-16 px-4 md:px-10 h-full pointer-events-none"
     >
-        <!-- C4 PLANT (Mixotroph) - Left of Tree -->
+        <!-- CAM PLANT (Orpin/Sedum) - Simple Original Style -->
         <div
-            class="relative pointer-events-auto z-10 origin-bottom scale-75 self-end mr-[-40px]"
+            class="relative pointer-events-auto z-10 origin-bottom self-end cursor-magnify group hover:scale-105 transition-transform"
+            on:click={() => dispatch("openCAM")}
+            on:keydown={(e) => e.key === "Enter" && dispatch("openCAM")}
+            role="button"
+            tabindex="0"
+            aria-label="Orpin CAM"
         >
-            <!-- Pixel Art Orchid/Orpin -->
+            <!-- Tooltip -->
             <div
-                class="w-16 h-24 relative group cursor-help transition-transform hover:scale-110"
-                role="button"
-                tabindex="0"
-                aria-label="Plante C4"
+                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50"
             >
-                <!-- Tooltip (Pixel Art) -->
+                🌵 Orpin (CAM)
+            </div>
+
+            <!-- Simple Plant Visual -->
+            <div class="relative w-16 h-24">
+                <!-- Tige (Stem) -->
                 <div
-                    class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] px-2 py-1 border border-white/50 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-50"
-                >
-                    🌵 Orpin (C4)
-                </div>
-                <!-- Stem (Clickable for Circulation) -->
-                <div
-                    class="absolute bottom-0 left-1/2 w-4 h-16 -translate-x-1/2 cursor-crosshair z-20"
-                    on:click|stopPropagation={() =>
-                        dispatch("openCirculationC4")}
-                    on:keydown|stopPropagation={(e) =>
-                        e.key === "Enter" && dispatch("openCirculationC4")}
-                    role="button"
-                    tabindex="0"
-                ></div>
-                <!-- Visual Stem -->
-                <div
-                    class="absolute bottom-0 left-1/2 w-2 h-16 bg-lime-700 -translate-x-1/2 pointer-events-none"
+                    class="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-16 bg-lime-700"
                 ></div>
 
-                <!-- Leaves (Pixelated Steps) -->
+                <!-- Feuille Gauche -->
                 <div
-                    class="absolute bottom-4 left-0 w-8 h-4 bg-lime-500 rounded-sm skew-y-12 border-b-2 border-lime-800"
+                    class="absolute bottom-4 left-0 w-8 h-4 bg-lime-500 skew-y-12 border-b-2 border-lime-800"
                 ></div>
+
+                <!-- Feuille Droite -->
                 <div
-                    class="absolute bottom-8 right-0 w-8 h-4 bg-lime-500 rounded-sm -skew-y-12 border-b-2 border-lime-800"
+                    class="absolute bottom-8 right-0 w-8 h-4 bg-lime-500 -skew-y-12 border-b-2 border-lime-800"
                 ></div>
-                <!-- Flower -->
+
+                <!-- Fleur Rose (Carré tourné) -->
                 <div
                     class="absolute top-2 left-1/2 -translate-x-1/2 w-6 h-6 bg-pink-400 rotate-45 border-2 border-pink-600"
                 ></div>
             </div>
         </div>
 
-        <!-- SMART TREE (New Phase 6) -->
+        <!-- C4 PLANT (Maïs/Corn) - Between Orpin and Tree -->
+        <div
+            class="relative pointer-events-auto z-15 origin-bottom self-end mr-[-20px]"
+        >
+            <CornPlant
+                isDay={!isNight}
+                on:openC4={() => dispatch("openFoliageC4")}
+                on:openCirculationC4={() => dispatch("openCirculationC4")}
+            />
+        </div>
+
+        <!-- SMART TREE (C3 - Apple Tree) -->
         <div class="relative pointer-events-auto z-30">
             <SmartTree
                 {weather}
@@ -118,6 +124,7 @@
                 on:openCirculation={() => dispatch("openCirculation")}
                 on:openRoots={() => dispatch("openRoots")}
                 on:openSymbiosisC4={() => dispatch("openSymbiosisC4")}
+                on:openCAM={() => dispatch("openCAM")}
             />
         </div>
 

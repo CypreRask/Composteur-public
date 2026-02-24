@@ -14,11 +14,16 @@
   import LearnView from "./LearnView.svelte"; // RESTORED
   import DataView from "./DataView.svelte"; // RESTORED
   import PhotosynthesisModule from "./components/ecosystem/tree/edu/PhotosynthesisModule.svelte"; // TREE MODULE (C3)
+  import PhotosynthesisModuleAdvanced from "./components/ecosystem/tree/edu/PhotosynthesisModuleAdvanced.svelte"; // TREE MODULE (C3) - ADVANCED
   import PhotosynthesisC4 from "./components/ecosystem/tree/edu/PhotosynthesisC4.svelte"; // C4 MODULE
   import CirculationModule from "./components/ecosystem/tree/edu/CirculationModule.svelte"; // TREE MODULE (C3)
   import CirculationC4 from "./components/ecosystem/tree/edu/CirculationC4.svelte"; // C4 MODULE
   import SymbiosisModule from "./components/ecosystem/tree/edu/SymbiosisModule.svelte"; // TREE MODULE (C3)
   import SymbiosisC4 from "./components/ecosystem/tree/edu/SymbiosisC4.svelte"; // C4 MODULE
+  import CellView from "./components/ecosystem/tree/edu/CellView.svelte"; // Level 2
+  import FoliageView from "./components/ecosystem/tree/edu/FoliageView.svelte"; // Level 1.5
+  import ChloroplastView from "./components/ecosystem/tree/edu/ChloroplastView.svelte"; // NEW: Deep Zoom Level 3
+  import PhotosynthesisCAM from "./components/ecosystem/tree/edu/PhotosynthesisCAM.svelte"; // CAM MODULE
 
   // Mock Data
   const MOCK_DATA = {
@@ -40,7 +45,6 @@
   let latest = MOCK_DATA;
   let weather = null;
   let history = [];
-  let isOffline = false; // New State for connection status
 
   // --- NAVIGATION STATE ---
   let activeTab = "monitor"; // 'monitor', 'data', 'learn'
@@ -80,35 +84,23 @@
   }
 
   // Fetch Logic (Simplified for brevity)
-  // Use VITE_API_URL from .env or relative path in PROD (Docker/Nginx)
-  // @ts-ignore
-  const API_URL = import.meta.env.PROD
-    ? ""
-    : import.meta.env.VITE_API_URL || "http://localhost:8085";
-
   async function fetchData() {
     try {
-      const res = await fetch(`${API_URL}/api/latest`);
-      if (res.ok) {
-        latest = await res.json();
-        isOffline = false;
-      } else {
-        isOffline = true;
-      }
+      const res = await fetch("http://localhost:8085/api/latest");
+      if (res.ok) latest = await res.json();
     } catch (e) {
       console.log("Backend offline (Latest)");
-      isOffline = true;
     }
 
     try {
-      const resW = await fetch(`${API_URL}/api/weather`);
+      const resW = await fetch("http://localhost:8085/api/weather");
       if (resW.ok) weather = await resW.json();
     } catch (e) {}
   }
 
   async function fetchHistory() {
     try {
-      const res = await fetch(`${API_URL}/api/history?limit=1000`);
+      const res = await fetch("http://localhost:8085/api/history?limit=1000");
       if (res.ok) {
         history = await res.json();
         history.reverse(); // Backend sends DESC, Frontend needs ASC (Oldest -> Newest)
@@ -164,25 +156,9 @@
           on:click={() => (activeTab = "learn")}
           label="LEARN"
         />
-        <RetroButton
-          small
-          active={activeTab === "test"}
-          color="purple"
-          on:click={() => (activeTab = "test")}
-          label="TEST"
-        />
       </div>
     </div>
   </div>
-
-  <!-- OFFLINE BANNER -->
-  {#if isOffline}
-    <div
-      class="bg-red-600 text-white text-center text-xs font-bold py-1 animate-pulse z-[60]"
-    >
-      ⚠️ CONTROLEUR HORS LIGNE - DONNÉES OBSOLÈTES (MODE DÉMO)
-    </div>
-  {/if}
 
   <!-- CONTENT AREA -->
   {#if activeTab === "monitor"}
@@ -227,17 +203,18 @@
             <Surface
               data={displayData}
               {weather}
-              {fluxState}
               on:openMicroscope={() => (activeWidget = "microscope")}
               on:openHardware={() => (activeWidget = "hardware")}
               on:inspectWaste={() => (activeWidget = "waste")}
               on:inspectBiology={() => (activeWidget = "microscope")}
-              on:openPhotosynthesis={() => (activeWidget = "photosynthesis")}
+              on:openPhotosynthesis={() => (activeWidget = "foliage")}
               on:openCirculation={() => (activeWidget = "circulation")}
               on:openRoots={() => (activeWidget = "roots")}
-              on:openPyramidC4={() => (activeWidget = "photosynthesis_c4")}
+              on:openFoliageC4={() => (activeWidget = "foliage_c4")}
               on:openCirculationC4={() => (activeWidget = "circulation_c4")}
               on:openSymbiosisC4={() => (activeWidget = "symbiosis_c4")}
+              on:openCAM={() => (activeWidget = "foliage_cam")}
+              on:openC4={() => (activeWidget = "foliage_c4")}
             />
           </div>
         </div>
@@ -255,7 +232,7 @@
       <!-- WIDGET OVERLAY (Blocking/Modal) -->
       {#if activeWidget}
         <div
-          class="absolute inset-0 z-[100] flex items-center justify-center pointer-events-auto bg-black/50 backdrop-blur-sm"
+          class="fixed inset-0 z-[100] flex items-center justify-center pointer-events-auto bg-black/50 backdrop-blur-sm p-4"
           on:click|self={closeWidget}
           on:keydown={(e) => e.key === "Escape" && closeWidget()}
           role="button"
@@ -269,17 +246,33 @@
             color={activeWidget === "photosynthesis" ? "green" : "blue"}
             mode="inline"
             width="w-full max-w-2xl"
+            closable={true}
           >
             <div class="text-black">
-              {#if activeWidget === "photosynthesis"}
-                <!-- EDUCATIONAL MODULE: PHOTOSYNTHESIS (C3) -->
+              {#if activeWidget === "cell"}
                 <div class="h-[500px] w-full">
-                  <PhotosynthesisModule {weather} />
+                  <CellView
+                    on:close={closeWidget}
+                    on:openChloroplast={() => (activeWidget = "chloroplast")}
+                  />
                 </div>
-              {:else if activeWidget === "photosynthesis_c4"}
-                <!-- EDUCATIONAL MODULE: PHOTOSYNTHESIS (C4) -->
+              {:else if activeWidget === "chloroplast"}
                 <div class="h-[500px] w-full">
-                  <PhotosynthesisC4 />
+                  <ChloroplastView
+                    {weather}
+                    on:close={() => (activeWidget = "cell")}
+                    on:openThylakoid={() => (activeWidget = "photosynthesis")}
+                  />
+                </div>
+              {:else if activeWidget === "photosynthesis"}
+                <PhotosynthesisModuleAdvanced
+                  on:back={() => (activeWidget = "chloroplast")}
+                />
+              {:else if activeWidget === "photosynthesis_c4"}
+                <div class="h-[500px] w-full">
+                  <PhotosynthesisC4
+                    on:back={() => (activeWidget = "foliage_c4")}
+                  />
                 </div>
               {:else if activeWidget === "circulation"}
                 <!-- EDUCATIONAL MODULE: CIRCULATION (C3) -->
@@ -297,16 +290,42 @@
                   <SymbiosisModule />
                 </div>
               {:else if activeWidget === "symbiosis_c4"}
-                <!-- EDUCATIONAL MODULE: SYMBIOSIS (C4) -->
                 <div class="h-[500px] w-full">
                   <SymbiosisC4 />
                 </div>
               {:else if activeWidget === "foliage"}
-                <!-- LEGACY FALLBACK -->
-                <h3 class="font-bold mb-2">🌿 Photosynthèse</h3>
-                <p class="text-xs mb-2">
-                  L'arbre transforme le CO2 et l'eau en sucre grâce au soleil.
-                </p>
+                <div class="h-[500px] w-full">
+                  <FoliageView
+                    plantType="C3"
+                    showToggle={false}
+                    on:close={closeWidget}
+                    on:openCell={() => (activeWidget = "cell")}
+                  />
+                </div>
+              {:else if activeWidget === "foliage_c4"}
+                <div class="h-[500px] w-full">
+                  <FoliageView
+                    plantType="C4"
+                    showToggle={false}
+                    on:close={closeWidget}
+                    on:openC4={() => (activeWidget = "photosynthesis_c4")}
+                  />
+                </div>
+              {:else if activeWidget === "foliage_cam"}
+                <div class="h-[500px] w-full">
+                  <FoliageView
+                    plantType="CAM"
+                    showToggle={false}
+                    on:close={closeWidget}
+                    on:openCAM={() => (activeWidget = "photosynthesis_cam")}
+                  />
+                </div>
+              {:else if activeWidget === "photosynthesis_cam"}
+                <div class="h-[500px] w-full">
+                  <PhotosynthesisCAM
+                    on:back={() => (activeWidget = "foliage_cam")}
+                  />
+                </div>
               {:else if activeWidget === "microscope"}
                 <!-- BIOLOGY INSPECTION -->
                 <h3 class="font-bold mb-2 text-lime-400">
@@ -442,124 +461,6 @@
   {:else if activeTab === "learn"}
     <div class="flex-1 bg-gray-900 overflow-auto">
       <LearnView />
-    </div>
-  {:else if activeTab === "test"}
-    <!-- TEST TAB - New Visual Design with StageFrame -->
-    <div class="flex-1 relative">
-      <StageFrame overlayActive={Boolean(activeWidget)}>
-        <div
-          class="w-full h-full flex flex-col bg-gradient-to-b from-[#87ceeb] via-[#87ceeb] to-[#2d4a3e]"
-        >
-          <!-- UI Info -->
-          <div
-            class="absolute top-4 left-4 bg-black/60 p-3 text-[10px] z-40 rounded border border-white/20"
-          >
-            <div class="text-[#8fbc8f] mb-1 font-bold">🧪 TEST MODE</div>
-            <div class="text-white">Temp: {displayData.temp_scd}°C</div>
-            <div class="text-white">Hum: {displayData.soil_hum}%</div>
-          </div>
-
-          <!-- Sky area -->
-          <div class="flex-1 relative">
-            <Sky weatherData={weather} />
-          </div>
-
-          <!-- Ground/Surface - New earthy green -->
-          <div
-            class="h-[140px] relative bg-[#558B2F] border-t-4 border-[#33691E]"
-          >
-            <SurfaceV2
-              data={displayData}
-              {weather}
-              isDay={!isNight}
-              on:openPhotosynthesis={() => (activeWidget = "photosynthesis")}
-              on:openCirculation={() => (activeWidget = "circulation")}
-              on:openRoots={() => (activeWidget = "roots")}
-              on:openCirculationC4={() => (activeWidget = "circulation_c4")}
-              on:inspectWaste={() => (activeWidget = "waste")}
-              on:openHardware={() => (activeWidget = "hardware")}
-              on:inspectBiology={() => (activeWidget = "microscope")}
-            />
-          </div>
-
-          <!-- Underground -->
-          <div
-            class="h-[35%] relative bg-gradient-to-b from-[#5d4037] to-[#3e2723]"
-          >
-            <Underground data={displayData} {weather} {fluxState} />
-          </div>
-        </div>
-
-        <!-- Overlay for widgets -->
-        <svelte:fragment slot="overlay">
-          {#if activeWidget}
-            <div
-              class="flex items-center justify-center p-4 w-full h-full"
-              on:click|self={closeWidget}
-              role="button"
-              tabindex="0"
-              aria-label="Fermer le widget"
-              on:keydown={(e) => e.key === "Escape" && closeWidget()}
-            >
-              <div class="w-full max-w-3xl max-h-[80vh] overflow-auto">
-                <RetroWindow
-                  title={activeWidget.toUpperCase()}
-                  on:close={closeWidget}
-                  color="green"
-                  mode="inline"
-                  width="w-full"
-                >
-                  <!-- Widget content same as monitor tab -->
-                  {#if activeWidget === "photosynthesis"}
-                    <PhotosynthesisModule {weather} />
-                  {:else if activeWidget === "circulation"}
-                    <CirculationModule />
-                  {:else if activeWidget === "roots"}
-                    <SymbiosisModule />
-                  {:else if activeWidget === "circulation_c4"}
-                    <CirculationC4 />
-                  {:else if activeWidget === "microscope"}
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <div
-                      class="p-4"
-                      on:click={(e) => e.stopPropagation()}
-                      role="group"
-                      aria-label="Section microscope"
-                      tabindex="-1"
-                    >
-                      <h3 class="font-bold mb-4 text-green-700">
-                        🔬 Analyse Microbiologique
-                      </h3>
-                      <div
-                        class="h-64 bg-black border-2 border-green-800 relative overflow-hidden"
-                      >
-                        <MicroscopeView
-                          temp={displayData.temp_scd}
-                          humidity={displayData.hum_scd}
-                        />
-                      </div>
-                    </div>
-                  {:else}
-                    <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-                    <div
-                      class="p-4 text-black"
-                      on:click={(e) => e.stopPropagation()}
-                      role="group"
-                      aria-label="Section {activeWidget}"
-                      tabindex="-1"
-                    >
-                      <h3 class="font-bold mb-2">{activeWidget}</h3>
-                      <p>Module en cours de développement...</p>
-                    </div>
-                  {/if}
-                </RetroWindow>
-              </div>
-            </div>
-          {/if}
-        </svelte:fragment>
-      </StageFrame>
     </div>
   {/if}
 </main>

@@ -18,32 +18,38 @@
             this.x = Math.random() * w;
             this.y = Math.random() * h;
             this.type = type; // 'bacteria', 'fungi', 'actinomycetes'
+            this.frame = Math.floor(Math.random() * 10);
 
             // Movement vectors
             this.angle = Math.random() * Math.PI * 2;
-            const speed = type === "bacteria" ? 0.5 : 0.1;
+            const speed = type === "bacteria" ? 0.8 : 0.2;
             this.vx = Math.cos(this.angle) * speed;
             this.vy = Math.sin(this.angle) * speed;
 
-            this.size = type === "bacteria" ? 1 : 2;
-
-            // Retro Colors
-            if (type === "bacteria")
+            // Appearance
+            if (type === "bacteria") {
                 this.color = "#4CAF50"; // Green
-            else if (type === "fungi")
+                this.shape = Math.random() > 0.5 ? "bacillus" : "cocci";
+                this.size = 2;
+            } else if (type === "fungi") {
                 this.color = "#FFF9C4"; // White/Yellow
-            else this.color = "#FF7043"; // Orange
-
-            this.timer = Math.random() * 100;
+                this.size = 4;
+                this.segments = []; // For trails/hyphae
+            } else {
+                // Actinomycetes
+                this.color = "#FF7043"; // Orange
+                this.size = 3;
+                this.segments = []; // For trails (branched filaments)
+            }
         }
 
         update(w, h, temp) {
-            this.timer++;
+            this.frame++;
 
             // Random twitch movement
-            if (Math.random() < 0.05) {
-                this.angle += Math.random() - 0.5;
-                const speed = this.type === "bacteria" ? 0.5 : 0.1;
+            if (Math.random() < 0.1) {
+                this.angle += (Math.random() - 0.5) * 2;
+                const speed = this.type === "bacteria" ? 0.8 : 0.2;
                 this.vx = Math.cos(this.angle) * speed;
                 this.vy = Math.sin(this.angle) * speed;
             }
@@ -58,27 +64,73 @@
             if (this.x > w) this.x = 0;
             if (this.y < 0) this.y = h;
             if (this.y > h) this.y = 0;
+
+            // Trail logic for Fungi (Hyphal growth simulation)
+            if (this.type === "fungi" || this.type === "actinomycetes") {
+                this.segments.unshift({ x: this.x, y: this.y });
+                if (this.segments.length > (this.type === "fungi" ? 10 : 5)) {
+                    this.segments.pop();
+                }
+            }
         }
 
         draw(ctx) {
             ctx.fillStyle = this.color;
-            // Draw square for pixel art look
-            ctx.fillRect(
-                Math.floor(this.x),
-                Math.floor(this.y),
-                this.size,
-                this.size,
-            );
 
-            // Draw tail/filament for fungi
-            if (this.type === "fungi") {
-                ctx.fillStyle = "rgba(255, 249, 196, 0.3)";
-                ctx.fillRect(
-                    Math.floor(this.x - this.vx * 5),
-                    Math.floor(this.y - this.vy * 5),
-                    1,
-                    1,
-                );
+            if (this.type === "bacteria") {
+                if (this.shape === "bacillus") {
+                    // Pill shape rotating
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+                    ctx.fillRect(-2, -1, 4, 2); // Body
+                    // Flagella wiggle
+                    if (this.frame % 4 < 2) {
+                        ctx.fillStyle = "rgba(76, 175, 80, 0.5)";
+                        ctx.fillRect(-4, 0, 2, 1);
+                    }
+                    ctx.restore();
+                } else {
+                    // Cocci (Cluster)
+                    ctx.fillRect(Math.floor(this.x), Math.floor(this.y), 2, 2);
+                    ctx.fillRect(
+                        Math.floor(this.x + 2),
+                        Math.floor(this.y),
+                        2,
+                        2,
+                    );
+                    ctx.fillRect(
+                        Math.floor(this.x + 1),
+                        Math.floor(this.y + 2),
+                        2,
+                        2,
+                    );
+                }
+            } else if (this.type === "fungi") {
+                // Hyphae (Segments)
+                ctx.beginPath();
+                ctx.strokeStyle = this.color;
+                ctx.lineWidth = 1;
+                if (this.segments && this.segments.length > 0) {
+                    ctx.moveTo(this.segments[0].x, this.segments[0].y);
+                    for (let i = 1; i < this.segments.length; i++) {
+                        ctx.lineTo(this.segments[i].x, this.segments[i].y);
+                    }
+                }
+                ctx.stroke();
+                // Spore head
+                ctx.fillRect(Math.floor(this.x), Math.floor(this.y), 3, 3);
+            } else if (this.type === "actinomycetes") {
+                // Star shape / Branched
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.frame * 0.1);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-2, -2, 4, 4); // Center
+                // Filaments
+                ctx.fillRect(-4, 0, 8, 1);
+                ctx.fillRect(0, -4, 1, 8);
+                ctx.restore();
             }
         }
     }
@@ -106,10 +158,10 @@
                 if (r > 0.6) type = "actinomycetes";
                 else type = "bacteria";
             } else {
-                // Mesophilic profile
-                if (r > 0.8) type = "fungi";
-                else if (r > 0.9) type = "actinomycetes";
-                else type = "bacteria";
+                // Mesophilic profile — order matters: check tightest range first
+                if (r > 0.9) type = "actinomycetes";      // 10% chance
+                else if (r > 0.75) type = "fungi";         // 15% chance
+                else type = "bacteria";                     // 75% chance
             }
 
             particles.push(new Microbe(w, h, type));
@@ -165,7 +217,7 @@
 </script>
 
 <div
-    class="w-full h-full relative bg-[#1A100E] overflow-hidden group cursor-help"
+    class="w-full h-full relative bg-[#1A100E] overflow-hidden group cursor-magnify"
     on:click={() => (showInfo = !showInfo)}
     on:keydown={(e) => e.key === "Enter" && (showInfo = !showInfo)}
     tabindex="0"

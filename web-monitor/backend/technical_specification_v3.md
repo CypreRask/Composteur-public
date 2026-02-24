@@ -1,98 +1,98 @@
-# Spécification d'Architecture : Jumeau Numérique Hybride pour Compostage Prédictif (V3)
+# Architecture Specification: Hybrid Digital Twin for Predictive Composting (V3)
 
-**Projet :** Smart Compost Monitor
-**Date :** 1 Février 2026
-**Statut :** Cadre Conceptuel
-**Référence :** Recherche Interne "V3-Hybrid"
+**Project:** Smart Compost Monitor  
+**Date:** February 1, 2026  
+**Status:** Conceptual Framework  
+**Reference:** Internal Research "Kimi-V3"
 
 ---
 
-## 1. Résumé Exécutif
-Ce document définit l'architecture "V3" pour le Système d'Intelligence du Compost. Dépassant les simples heuristiques (V2), la V3 implémente un **Jumeau Numérique Hybride Mécaniste-Stochastique**. Son objectif principal n'est pas de "fitter" les données historiques, mais d'estimer **l'État Biologique Latent** du tas pour prédire les événements critiques (Anaérobie, Crash d'Activité) avec un horizon de 72h à 120h.
+## 1. Executive Summary
+This document defines the "V3" architecture for the Compost Intelligence System. Moving beyond simple heuristics (V2), V3 implements a **Hybrid Mechanistic-Stochastic Digital Twin**. Its primary goal is not to curve-fit historical data, but to estimate the **Latent Biological State** of the pile to predict critical failure events (Anaerobia, Activity Crash) with a 72h-120h horizon.
 
-## 2. Topologie des Capteurs : Causes vs Symptômes
-Une intuition critique de la V3 est la classification hiérarchique des entrées. Pour éviter les "biais d'apprentissage", nous distinguons les *moteurs* du système de ses *manifestations*.
+## 2. Sensor Topology: Causes vs. Symptoms
+A critical insight of V3 is the hierarchical classification of inputs. To prevent "learning artifacts," we distinguish between the *drivers* of the system and its *manifestations*.
 
-### 2.1 Moteurs Principaux (Les "Causes") [Haute Fiabilité]
-Ces capteurs mesurent les conditions limites physiques qui dictent la possibilité biologique.
-*   **Température ($T$) :** Proxy direct du Taux Métabolique (Respiration/Dégradation du $C_{rapide}$).
-*   **Humidité ($W$) :** Clé du Transport d'Oxygène (Coefficient de diffusion $D_{O2} \propto f(W)$). L'excès mène au bouchage des pores (Anaérobie).
-*   **pH :** Détermine l'équilibre chimique de l'Ammoniac ($NH_3 \leftrightarrow NH_4^+$). pH haut + T haute = Risque de Volatilisation.
-*   **EC (Conductivité) :** Proxy de la Minéralisation (Salinité) et de l'Humification. Une EC élevée peut agir comme inhibiteur.
+### 2.1 Core Drivers (The "Causes") [High Reliability]
+These sensors measure the physical boundary conditions that dictate biological possibility.
+*   **Temperature ($T$):** Direct proxy for Metabolic Rate (Respiration/Degradation of $C_{fast}$).
+*   **Humidity ($W$):** Key to Oxygen Transport (Diffusion coefficient $D_{O2} \propto f(W)$). Excess leads to pore clogging (Anaerobia).
+*   **pH:** Determines the chemical equilibrium of Ammonia ($NH_3 \leftrightarrow NH_4^+$). High pH + High T = Volatilization Risk.
+*   **EC (Conductivity):** Proxy for Mineralization (Salinity) and Humification. High EC can act as an inhibitor.
 
-### 2.2 Signatures Gazeuses (Les "Symptômes") [Basse Fiabilité / Haute Latence]
-Les capteurs de gaz mesurent le *résultat* de l'activité biologique, modifié par les délais de transport.
-*   **CO₂ :** Respiration Aérobie (Retardé par diffusion).
-*   **CH₄ :** La signature primaire des **Bascules Anaérobies** (Méthanogenèse). Dépend fortement de la fraction de "poches anoxiques".
-*   **NH₃ :** Saturation en Azote ou déséquilibre C/N.
-*   **CO :** Artefact/Signal trace, pondéré faiblement.
+### 2.2 Gas Signatures (The "Symptoms") [Low Reliability / High Latency]
+Gas sensors measure the *result* of biological activity, modified by transport delays.
+*   **CO₂:** Aerobic Respiration (Lagged by diffusion).
+*   **CH₄:** The primary signature of **Anaerobic Shifts** (Methanogenesis). Depends heavily on "anoxious pockets" fraction.
+*   **NH₃:** Nitrogen saturation or C/N imbalance.
+*   **CO:** Artifact/Trace signal, weighted weakly.
 
-**Stratégie :** Le modèle doit efficacement "inverser" la fonction de transport : $Observation(t) = Transport(Etat(t-\delta)) + Bruit$.
+**Strategy:** The model must effectively "invert" the transport function: $Observation(t) = Transport(State(t-\delta)) + Noise$.
 
-## 3. Architecture du Jumeau Numérique
+## 3. The Digital Twin Architecture
 
-### 3.1 Vecteur d'État Latent ($\vec{x}_t$)
-Le Jumeau Numérique estime des variables qui ne peuvent pas être mesurées directement mais définissent la trajectoire future du système :
+### 3.1 Latent State Vector ($\vec{x}_t$)
+The Digital Twin estimates variables that cannot be directly measured but define the system's future trajectory:
 
-*   $A(t)$ : **Activité Microbienne Effective** (Fraction de biomasse active).
-*   $C_{rapide}(t)$ : Stock de **Carbone Bio-disponible** (Sucres/Cellulose).
-*   $N_{dispo}(t)$ : Stock d'**Azote Minéralisé** ($NH_4^+/NO_3^-$).
-*   $W_{eff}(t)$ : **Saturation Effective** (Occupation des pores).
-*   $K_{O2}(t)$ : **Capacité d'Aération** (Porosité/Percolation estimée).
-*   $AnaFrac(t)$ : **Fraction Anoxique** (0.0 à 1.0).
+*   $A(t)$: **Effective Microbial Activity** (Biomass active fraction).
+*   $C_{fast}(t)$: **Bio-available Carbon** stock (Sugars/Cellulose).
+*   $N_{avail}(t)$: **Mineralized Nitrogen** stock ($NH_4^+/NO_3^-$).
+*   $W_{eff}(t)$: **Effective Saturation** (Pore occupancy).
+*   $K_{O2}(t)$: **Aeration Capacity** (Estimated Porosity/Percolation).
+*   $AnaFrac(t)$: **Anoxic Fraction** (0.0 to 1.0).
 
-### 3.2 Le Modèle Hybride
-Le Jumeau opère en "Shadow Mode", mettant à jour son état $\vec{x}_t$ à chaque pas de temps.
+### 3.2 The Hybrid Model
+The Twin operates in "Shadow Mode," updating its state $\vec{x}_t$ at each time step.
 
-#### A. Cœur Mécaniste (La Physique)
-Définit l'évolution de $\vec{x}_t$ :
-$$ \frac{dA}{dt} = \mu(T, W, pH) \cdot \frac{C_{rapide}}{K_c + C_{rapide}} - Decheance $$
-$$ \text{AnaFrac} = f(W_{eff}, K_{O2}) \quad (\text{si Demande } O_2 > \text{Offre } O_2) $$
+#### A. Mechanistic Core (The Physics)
+defines the evolution of $\vec{x}_t$:
+$$ \frac{dA}{dt} = \mu(T, W, pH) \cdot \frac{C_{fast}}{K_c + C_{fast}} - Decay $$
+$$ \text{AnaFrac} = f(W_{eff}, K_{O2}) \quad (\text{if Demand } O_2 > \text{Supply } O_2) $$
 
-#### B. Couche d'Observation (Le Modèle Capteur)
-Mappe l'état vers les mesures attendues (Problème Inverse) :
-$$ CO_{2,mesure}(t) = \text{Diffuse}(A(t) \cdot \text{AerobicFrac}) + \epsilon_{derive} $$
+#### B. Observation Layer (The Sensor Model)
+Maps state to expected measurements (Inverse Problem):
+$$ CO_{2,measured}(t) = \text{Diffuse}(A(t) \cdot \text{AerobicFrac}) + \epsilon_{drift} $$
 
-### 3.3 Prédiction Probabiliste (L'Ensemble)
-Au lieu d'une courbe unique, le système V3 projette un **Ensemble de N=50 trajectoires** dans le futur (J+5), échantillonnant les incertitudes sur :
-1.  Météo (Pluie/Temp).
-2.  Intervention (Limites utilisateur).
-3.  Erreur Modèle (Bruit de processus).
+### 3.3 Probabilistic Prediction (The Ensemble)
+Instead of a single curve, the V3 system projects an **Ensemble of N=50 trajectories** into the future (J+5), sampling uncertainties in:
+1.  Weather (Rain/Temp).
+2.  Intervention (User limits).
+3.  Model Error (Process Noise).
 
-**Sortie :** Probabilité de Danger $P(E|t_{maintenant})$
-*   "Probabilité d'Anaérobie > 50% dans 48h"
-*   "Probabilité de Crash d'Activité > 80% dans 72h"
+**Output:** Hazard Probability $P(E|t_{now})$
+*   "Probability of Anaerobia > 50% in 48h"
+*   "Probability of Activity Crash > 80% in 72h"
 
-## 4. Stratégie d'Implémentation
+## 4. Implementation Strategy
 
-### 4.1 Entraînement Synthétique ("Sim-to-Real")
-Pour entraîner les composants ML (Correction Résiduelle & Fonction de Hasard), nous générons un dataset synthétique massif via **Domain Randomization** :
-*   Simuler la dérive capteur (Offset/Gain walk).
-*   Simuler les délais membranaires (1h - 48h).
-*   Simuler l'hétérogénéité (Poches anaérobies localisées).
-*   Simuler les "Événements Externes" (Retournement, Ajout Verts, Pluie).
+### 4.1 Synthetic Training ("Sim-to-Real")
+To train the ML components (Residual Correction & Hazard Function), we generate a massive synthetic dataset via **Domain Randomization**:
+*   Simulate sensor drift (Offset/Gain walk).
+*   Simulate membrane delays (1h - 48h).
+*   Simulate heterogeneity (Spotty anaerobic pockets).
+*   Simulate "External Events" (Turning, Adding Greens, Rain).
 
-Le modèle ML apprend à mapper *l'historique capteur bruité et retardé* vers des *probabilités d'état latent propres*.
+The ML model learns to map *noisy, delayed sensor history* to *clean latent state probabilities*.
 
-### 4.2 Le Moteur "What-If"
-En accédant à l'État Latent, le système peut simuler des contrefactuels :
-*   *Action :* "Ajouter 5kg Matière Sèche (Bruns)" $\rightarrow$ $W_{eff} \downarrow, K_{O2} \uparrow$.
-*   *Prédiction :* $P(Anaérobie)$ chute de 85% à 12%.
-*   *Recommandation :* "Ajouter des Bruns pour prévenir le crash imminent."
+### 4.2 The "What-If" Engine
+By accessing the Latent State, the system can simulate counterfactuals:
+*   *Action:* "Add 5kg Dry Matter (Browns)" $\rightarrow$ $W_{eff} \downarrow, K_{O2} \uparrow$.
+*   *Prediction:* $P(Anaerobia)$ drops from 85% to 12%.
+*   *Recommendation:* "Add Browns to prevent imminent crash."
 
-## 5. Roadmap de Déploiement
+## 5. Deployment Roadmap
 
-### Phase 1 : Alerte Robuste (Actuel V2+)
-*   Modèle : Règles Heuristiques + Détection de Tendance (Moteur V2).
-*   Sortie : État Actuel + Tendance Naïve (Linéaire).
+### Phase 1: Robust Alerting (Current V2+)
+*   Model: Heuristic Rules + Trend Detection (V2 Engine).
+*   Output: Current State + Naive Trend (Linear).
 
-### Phase 2 : Jumeau Ombre (V3 Alpha)
-*   Modèle : Estimateur d'État Mécaniste tournant en temps réel.
-*   Sortie : Variables Latentes affichées (estimation stock $C_{rapide}$), Projection 5 jours.
+### Phase 2: Shadow Twin (V3 Alpha)
+*   Model: Mechanistic State Estimator running in real-time.
+*   Output: Latent Variables displayed ($C_{fast}$ stock estimate), 5-day Projection.
 
-### Phase 3 : Résidus Neuronaux (V3 Beta)
-*   Modèle : Deep Learning entraîné sur Données Synthétiques corrige le Noyau Mécaniste.
-*   Sortie : Maintenance Prédictive, Détection de Panne Capteur ("Désaccord CO2 implique défaillance capteur").
+### Phase 3: Neural Residuals (V3 Beta)
+*   Model: Deep Learning trained on Synthetic Data corrects the Mechanistic Kernel.
+*   Output: Predictive Maintenance, Sensor Fault Detection ("CO2 mismatch implies sensor failure").
 
 ## 6. Conclusion
-L'Architecture V3 représente un changement de paradigme du "Monitoring" vers la "Gestion". En distinguant les moteurs des symptômes et en modélisant l'état biologique caché, le système passe d'un observateur passif à un système expert actif et prédictif, capable de guider l'utilisateur à travers le processus de compostage avec une prévoyance scientifiquement fondée.
+The V3 Architecture represents a paradigm shift from "Monitoring" to "Management." By distinguishing drivers from symptoms and modelling the hidden biological state, the system transitions from a passive observer to an active, predictive expert system capable of guiding the user through the composting process with scientifically grounded foresight.

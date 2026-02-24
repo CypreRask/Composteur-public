@@ -45,15 +45,9 @@
       return;
     }
 
-    // Use VITE_API_URL from .env or relative path in PROD (Docker/Nginx)
-    // @ts-ignore
-    const API_URL = import.meta.env.PROD
-      ? ""
-      : import.meta.env.VITE_API_URL || "http://localhost:8085";
-
     try {
       const res = await fetch(
-        `${API_URL}/api/history/aggregate?interval=${interval}&days=${days}`,
+        `http://localhost:8085/api/history/aggregate?interval=${interval}&days=${days}`,
       );
       if (res.ok) {
         const raw = await res.json();
@@ -132,13 +126,8 @@
 
   async function fetchForecast() {
     if (!data || data.length < 1) return;
-    // @ts-ignore
-    const API_URL = import.meta.env.PROD
-      ? ""
-      : import.meta.env.VITE_API_URL || "http://localhost:8085";
-
     try {
-      const res = await fetch(`${API_URL}/api/predict`, {
+      const res = await fetch("http://localhost:8085/api/predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -187,7 +176,7 @@
   >
     <div class="flex items-center gap-4">
       <div
-        class="text-2xl font-bold text-[#C0CA33] uppercase tracking-wider cursor-pointer select-none hover:text-white transition-colors"
+        class="text-2xl font-bold text-[#C0CA33] uppercase tracking-wider cursor-magnify select-none hover:text-white transition-colors"
         onclick={() => (isExpert = !isExpert)}
         onkeydown={(e) =>
           (e.key === "Enter" || e.key === " ") && (isExpert = !isExpert)}
@@ -198,7 +187,7 @@
       </div>
       {#if filtered.length > 0}
         <div
-          class="px-2 py-1 bg-[#22c55e]/20 border border-[#22c55e] text-[#22c55e] text-xs cursor-pointer"
+          class="px-2 py-1 bg-[#22c55e]/20 border border-[#22c55e] text-[#22c55e] text-xs cursor-magnify"
           onclick={() => (isExpert = !isExpert)}
           onkeydown={(e) =>
             (e.key === "Enter" || e.key === " ") && (isExpert = !isExpert)}
@@ -247,7 +236,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 z-40 relative">
           <!-- TEMP -->
           <div
-            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-help hover:z-50 hover:border-[#C0CA33] transition-all"
+            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-magnify hover:z-50 hover:border-[#C0CA33] transition-all"
           >
             <div
               class="text-[#8d6e63] text-xs font-bold uppercase mb-1 flex justify-between group-hover:text-[#C0CA33]"
@@ -273,7 +262,7 @@
           </div>
           <!-- HUM -->
           <div
-            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-help hover:z-50 hover:border-[#06b6d4] transition-all"
+            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-magnify hover:z-50 hover:border-[#06b6d4] transition-all"
           >
             <div
               class="text-[#8d6e63] text-xs font-bold uppercase mb-1 flex justify-between group-hover:text-[#06b6d4]"
@@ -299,7 +288,7 @@
           </div>
           <!-- CO2 -->
           <div
-            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-help hover:z-50 hover:border-[#22c55e] transition-all"
+            class="bg-[#3E2723] p-3 border-2 border-[#558B2F] relative group cursor-magnify hover:z-50 hover:border-[#22c55e] transition-all"
           >
             <div
               class="text-[#8d6e63] text-xs font-bold uppercase mb-1 flex justify-between group-hover:text-[#22c55e]"
@@ -516,7 +505,7 @@
             <!-- EDUCATIONAL TOOLTIP -->
             <div class="absolute top-0 right-2 group z-10">
               <div
-                class="cursor-help text-[#558B2F] hover:text-[#C0CA33] transition-colors"
+                class="cursor-magnify text-[#558B2F] hover:text-[#C0CA33] transition-colors"
               >
                 [METHOD?]
               </div>

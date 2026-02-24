@@ -85,7 +85,7 @@
             <span class="text-[#FFF8E1] font-bold uppercase"
                 >{stateLabels[bioState] || bioState}</span
             >
-            <div class="group relative ml-2 cursor-help">
+            <div class="group relative ml-2 cursor-magnify">
                 <span
                     class="text-[#C0CA33] font-bold border border-[#C0CA33] rounded-full w-5 h-5 flex items-center justify-center text-xs"
                     >?</span
@@ -203,7 +203,7 @@
             Pour plus de détails :
         </div>
         <div
-            class="bg-[#558B2F] text-[#2d1b18] px-6 py-2 font-bold text-lg uppercase shadow-[4px_4px_0_rgba(0,0,0,0.5)] border-2 border-[#1a100e] inline-block hover:scale-105 transition-transform cursor-pointer"
+            class="bg-[#558B2F] text-[#2d1b18] px-6 py-2 font-bold text-lg uppercase shadow-[4px_4px_0_rgba(0,0,0,0.5)] border-2 border-[#1a100e] inline-block hover:scale-105 transition-transform cursor-magnify"
         >
             ⬇ Vue Scientifique ⬇
         </div>

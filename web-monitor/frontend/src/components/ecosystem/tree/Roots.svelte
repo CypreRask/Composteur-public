@@ -19,7 +19,7 @@
 
 <!-- CONTAINER: Adjusted width to encompass both Tree (Center) and C4 (Left) -->
 <div
-    class="relative w-[900px] h-[350px] overflow-visible cursor-pointer select-none group"
+    class="relative w-[900px] h-[350px] overflow-visible cursor-magnify select-none group"
     on:click={() => dispatch("openRoots")}
     on:keydown={(e) => e.key === "Enter" && dispatch("openRoots")}
     role="button"
@@ -56,7 +56,7 @@
         <!-- === 1. TREE ROOT SYSTEM (CENTER) - V7.5 FINAL (SOLID) === -->
         <g
             transform="translate(150, 32)"
-            class="cursor-alias hover:brightness-125 transition-all hover:scale-105"
+            class="cursor-magnify hover:brightness-125 transition-all hover:scale-105"
             style="transform-box: fill-box; transform-origin: top center;"
             on:mouseenter={() => setHover("Racines (Ancrage & Structure)")}
             on:mouseleave={clearHover}
@@ -156,33 +156,86 @@
             </g>
         </g>
 
-        <!-- === 2. C4 PLANT ROOTS (LEFT) - PIXEL ART === -->
+        <!-- === 2. C4 PLANT ROOTS (Corn - LEFT OF TREE) - PIXEL ART === -->
         <g
-            transform="translate(-40, 0)"
-            class="cursor-alias hover:brightness-125 transition-all hover:scale-110 origin-center"
+            transform="translate(-60, 0)"
+            class="cursor-magnify hover:brightness-125 transition-all hover:scale-110 origin-center"
             style="transform-box: fill-box;"
             on:click|stopPropagation={() => dispatch("openSymbiosisC4")}
             on:keydown|stopPropagation={(e) =>
                 e.key === "Enter" && dispatch("openSymbiosisC4")}
             role="button"
             tabindex="0"
-            on:mouseenter={() => setHover("Racines C4 (Endomycorhizes)")}
+            on:mouseenter={() => setHover("🌽 Racines Maïs C4 — Cliquez pour Explorer")}
             on:mouseleave={clearHover}
-            aria-label="C4 Roots"
+            aria-label="C4 Roots - Cliquez pour explorer l'endomycorhize"
         >
+            <!-- Invisible larger hit area -->
+            <rect x="-20" y="-15" width="40" height="60" fill="transparent" />
+            <!-- Stem base -->
             <rect x="-4" y="-10" width="8" height="10" fill="#689F38" />
+            <!-- Root branches (thicker, more visible) -->
             <path
-                d="M0,0 V20 H4 V30 H8 V40"
+                d="M0,0 V20 H4 V30 H8 V45"
                 fill="none"
                 stroke="#689F38"
-                stroke-width="2"
+                stroke-width="3"
             />
             <path
-                d="M0,0 V15 H-4 V25 H-8 V35"
+                d="M0,0 V15 H-4 V25 H-8 V40"
                 fill="none"
                 stroke="#689F38"
-                stroke-width="2"
+                stroke-width="3"
             />
+            <!-- Extra root hairs -->
+            <path d="M8,30 H14 V38" fill="none" stroke="#689F38" stroke-width="1.5" opacity="0.7" />
+            <path d="M-8,25 H-14 V35" fill="none" stroke="#689F38" stroke-width="1.5" opacity="0.7" />
+            <!-- Label -->
+            <text x="0" y="-18" text-anchor="middle" fill="#A5D6A7" font-size="7" font-family="monospace" opacity="0.8">C4</text>
+        </g>
+
+        <!-- === 2b. CAM PLANT ROOTS (Orpin - FAR LEFT) - PIXEL ART === -->
+        <g
+            transform="translate(-140, 5)"
+            class="cursor-magnify hover:brightness-125 transition-all hover:scale-110 origin-center"
+            style="transform-box: fill-box;"
+            on:click|stopPropagation={() => dispatch("openCAM")}
+            on:keydown|stopPropagation={(e) =>
+                e.key === "Enter" && dispatch("openCAM")}
+            role="button"
+            tabindex="0"
+            on:mouseenter={() => setHover("🌵 Racines Orpin CAM — Cliquez pour Explorer")}
+            on:mouseleave={clearHover}
+            aria-label="CAM Roots - Cliquez pour explorer la photosynthèse CAM"
+        >
+            <!-- Invisible larger hit area -->
+            <rect x="-20" y="-15" width="40" height="40" fill="transparent" />
+            <!-- Orpin has shallow, succulent-type roots (thicker) -->
+            <rect x="-3" y="-8" width="6" height="8" fill="#4CAF50" />
+            <!-- Shallow spreading roots (bigger) -->
+            <path
+                d="M0,0 V12 H3 V20"
+                fill="none"
+                stroke="#66BB6A"
+                stroke-width="3"
+            />
+            <path
+                d="M0,5 H-6 V16 H-10"
+                fill="none"
+                stroke="#66BB6A"
+                stroke-width="3"
+            />
+            <path
+                d="M0,8 H7 V18"
+                fill="none"
+                stroke="#66BB6A"
+                stroke-width="3"
+            />
+            <!-- Extra shallow roots -->
+            <path d="M-10,12 H-16" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.7" />
+            <path d="M7,14 H12" fill="none" stroke="#66BB6A" stroke-width="1.5" opacity="0.7" />
+            <!-- Label -->
+            <text x="0" y="-12" text-anchor="middle" fill="#A5D6A7" font-size="7" font-family="monospace" opacity="0.8">CAM</text>
         </g>
 
         <!-- === 3. ARBORESCENT MYCORRHIZAL NETWORK (The Web) === -->
@@ -190,14 +243,14 @@
             <g class="network-layer" filter="url(#mycoGlow)">
                 <!-- Style: Thin Cyan Lines, Branching like a fractal tree -->
 
-                <!-- Main Artery (Restored) -->
+                <!-- === MAIN ARTERY: Tree to Corn (C3 ↔ C4) === -->
                 <path
-                    d="M60,80 H10 V60 H-20 V40 H-36"
+                    d="M30,60 H10 V50 H-20 V40 H-60"
                     fill="none"
                     stroke="#5CD6D6"
-                    stroke-width="1"
-                    stroke-dasharray="2 2"
-                    class="flow-anim pointer-events-auto hover:stroke-cyan-200 hover:stroke-[2px] transition-all hover:scale-105"
+                    stroke-width="1.5"
+                    stroke-dasharray="3 2"
+                    class="flow-anim pointer-events-auto hover:stroke-cyan-200 hover:stroke-[2px] transition-all"
                     style="transform-box: fill-box; transform-origin: center;"
                     on:mouseenter={() =>
                         setHover("Réseau Mycorhizien (Wood Wide Web)")}
@@ -206,23 +259,56 @@
                     aria-label="Réseau Mycorhizien"
                 >
                 </path>
-                <!-- Branch A1 (Downwards from Artery) -->
+
+                <!-- === MAIN ARTERY 2: Corn to Orpin (C4 ↔ CAM) === -->
                 <path
-                    d="M10,60 V100 H0 V120 H-10"
+                    d="M-60,35 H-80 V25 H-100 V20 H-140"
+                    fill="none"
+                    stroke="#5CD6D6"
+                    stroke-width="1.5"
+                    stroke-dasharray="3 2"
+                    class="flow-anim delay-1"
+                />
+
+                <!-- === DEEP CONNECTION: All 3 plants via deep soil === -->
+                <path
+                    d="M-10,140 H-50 V150 H-100 V130 H-130 V90 H-140"
+                    fill="none"
+                    stroke="#5CD6D6"
+                    stroke-width="1"
+                    stroke-dasharray="2 3"
+                    opacity="0.7"
+                    class="flow-anim delay-2"
+                />
+
+                <!-- Branch A1: Tree Deep (Downwards) -->
+                <path
+                    d="M10,60 V100 H0 V115 H-15 V130"
                     fill="none"
                     stroke="#5CD6D6"
                     stroke-width="1"
                     stroke-dasharray="1 3"
                     opacity="0.6"
                 />
-                <!-- Branch A2 (Upwards from C4) -->
+
+                <!-- Branch A2: Corn Upwards -->
                 <path
-                    d="M-20,40 V20 H-10"
+                    d="M-60,40 V25 H-40 V20"
                     fill="none"
                     stroke="#5CD6D6"
                     stroke-width="1"
                     stroke-dasharray="1 3"
                     opacity="0.6"
+                />
+
+                <!-- Branch A3: Orpin shallow spread -->
+                <path
+                    d="M-140,20 H-120 V15 H-100 V25 H-85 V40 H-80"
+                    fill="none"
+                    stroke="#5CD6D6"
+                    stroke-width="1"
+                    stroke-dasharray="1 3"
+                    opacity="0.5"
                 />
 
                 <!-- CONNECTION B: Deep Soil Exploration (Left) -->
@@ -284,15 +370,24 @@
                     role="img"
                     aria-label="Nodes"
                 >
+                    <!-- Tree-Corn junction -->
+                    <rect x="-18" y="48" width="5" height="5" />
+                    <!-- Corn-Orpin junction -->
+                    <rect x="-98" y="28" width="5" height="5" />
+                    <!-- Orpin node -->
+                    <rect x="-138" y="23" width="4" height="4" />
+                    <!-- Deep network nodes -->
                     <rect x="8" y="58" width="4" height="4" />
-                    <rect x="-22" y="38" width="4" height="4" />
+                    <rect x="-60" y="38" width="4" height="4" />
                     <rect x="58" y="158" width="4" height="4" />
                     <rect x="18" y="178" width="4" height="4" />
                     <rect x="278" y="108" width="4" height="4" />
                 </g>
 
                 <!-- PARTICLES (Nutrient Packets) -->
-                <!-- Moving along the main arteries -->
+                <!-- Moving along the main arteries connecting all 3 plants -->
+
+                <!-- SUGAR (Yellow) - Tree to Corn -->
                 <g
                     fill="#FFD54F"
                     class="pointer-events-auto transition-transform hover:scale-110"
@@ -302,31 +397,63 @@
                     role="img"
                     aria-label="Sugar"
                 >
-                    <!-- Yellow = Carbon/Sugar -->
-                    <rect width="3" height="3">
+                    <rect width="4" height="4">
                         <animateMotion
-                            path="M60,80 H10 V60 H-20 V40 H-36"
+                            path="M30,60 H10 V50 H-20 V40 H-60"
                             dur="3s"
                             repeatCount="indefinite"
                         />
                     </rect>
                 </g>
+
+                <!-- SUGAR (Yellow) - Corn to Orpin -->
+                <g fill="#FFEB3B">
+                    <rect width="3" height="3">
+                        <animateMotion
+                            path="M-60,35 H-80 V25 H-100 V20 H-140"
+                            dur="4s"
+                            repeatCount="indefinite"
+                        />
+                    </rect>
+                </g>
+
+                <!-- NITROGEN/MINERALS (Blue) - Orpin to Corn -->
                 <g
                     fill="#81D4FA"
                     class="pointer-events-auto transition-transform hover:scale-110"
                     style="transform-box: fill-box; transform-origin: center;"
-                    on:mouseenter={() => setHover("Flux d'Azote & Eau")}
+                    on:mouseenter={() => setHover("Flux d'Azote & Minéraux")}
                     on:mouseleave={clearHover}
                     role="img"
-                    aria-label="Water"
+                    aria-label="Minerals"
                 >
-                    <!-- Blue = Water/Nitrogen -->
+                    <rect width="4" height="4">
+                        <animateMotion
+                            path="M-140,20 H-100 V25 H-60 V40"
+                            dur="5s"
+                            repeatCount="indefinite"
+                        />
+                    </rect>
+                </g>
+
+                <!-- MINERALS (Blue) - Corn to Tree -->
+                <g fill="#4FC3F7">
                     <rect width="3" height="3">
                         <animateMotion
-                            path="M36,40 H20 V60 H-10 V80 H-60"
+                            path="M-60,40 H-20 V50 H10 V60 H30"
                             dur="4s"
                             repeatCount="indefinite"
-                            rotate="auto"
+                        />
+                    </rect>
+                </g>
+
+                <!-- PHOSPHORUS (Purple) - Deep network -->
+                <g fill="#CE93D8">
+                    <rect width="3" height="3">
+                        <animateMotion
+                            path="M-140,90 V130 H-100 V150 H-50 V140 H-10"
+                            dur="6s"
+                            repeatCount="indefinite"
                         />
                     </rect>
                 </g>

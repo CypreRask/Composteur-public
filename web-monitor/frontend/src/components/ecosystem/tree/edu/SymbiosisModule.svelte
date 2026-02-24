@@ -1,5 +1,6 @@
 <script>
     import { onMount } from "svelte";
+    import { fly, fade } from "svelte/transition";
 
     // STORY MODE STATE
     let step = 0;
@@ -37,9 +38,46 @@
             step = 0; // Loop or End
         }
     }
+
+    // --- BIO-MARKERS ---
+    let activeMarker = null;
+    const MARKERS = [
+        {
+            id: "root",
+            x: 20,
+            y: 30,
+            label: "Racine (Hôte)",
+            text: "La plante hôte. Ses racines sont épaisses et ne peuvent pas aller partout. Elle a besoin d'aide pour trouver à manger !",
+        },
+        {
+            id: "fungus",
+            x: 70,
+            y: 50,
+            label: "Mycorhize (Ami)",
+            text: "Le champignon partenaire. Ses filaments (hyphes) très fins multiplient la surface d'absorption jusqu'à 100x. Ils captent eau et phosphore loin des racines.",
+        },
+        {
+            id: "hartig",
+            x: 40,
+            y: 60,
+            label: "Réseau de Hartig",
+            text: "La zone d'échange. Le champignon s'enroule autour des cellules sans les tuer. C'est là que le troc 'Sucre contre Minéraux' a lieu.",
+            minStep: 1,
+        },
+    ];
+
+    function toggleMarker(marker) {
+        if (activeMarker === marker) activeMarker = null;
+        else activeMarker = marker;
+    }
 </script>
 
-<div class="flex flex-col h-full font-pixel text-white select-none">
+<div
+    class="flex flex-col h-full font-pixel text-white select-none relative"
+    on:click={() => (activeMarker = null)}
+    on:keydown={(e) => e.key === "Escape" && (activeMarker = null)}
+    role="presentation"
+>
     <!-- Header -->
     <div
         class="flex justify-between items-center mb-2 border-b-2 border-white/20 pb-2"
@@ -54,9 +92,9 @@
 
     <!-- SCHEMATIC SCENE -->
     <div
-        class="relative flex-grow bg-[#4E342E] border-4 border-[#3E2723] rounded-lg overflow-hidden shadow-inner mb-2 group cursor-pointer w-full text-left"
+        class="relative flex-grow bg-[#4E342E] border-4 border-[#3E2723] rounded-lg overflow-hidden shadow-inner mb-2 group cursor-magnify w-full text-left"
         on:click={nextStep}
-        on:keydown={(e) => e.key === 'Enter' && nextStep()}
+        on:keydown={(e) => e.key === "Enter" && nextStep()}
         role="button"
         tabindex="0"
         aria-label="Passer à l'étape suivante"
@@ -307,25 +345,81 @@
             {/if}
         </svg>
 
+        <!-- BIO-MARKERS OVERLAY -->
+        <!-- Placed ON TOP of SVG -->
+        {#each MARKERS as m}
+            {#if !m.minStep || step >= m.minStep}
+                <button
+                    class="absolute w-5 h-5 bg-yellow-400 text-black border border-white rounded-full flex items-center justify-center text-[10px] font-bold shadow-lg hover:scale-110 transition-transform z-40 animate-bounce-slight"
+                    style="left: {m.x}%; top: {m.y}%; animation-delay: {Math.random()}s"
+                    on:click|stopPropagation={() => toggleMarker(m)}
+                >
+                    ?
+                </button>
+            {/if}
+        {/each}
+
         <!-- Next Button Overlay for intuitive click -->
         <div
-            class="absolute bottom-4 right-4 animate-bounce text-white cursor-pointer z-20"
+            class="absolute bottom-4 right-4 animate-bounce text-white cursor-magnify z-20 pointer-events-none"
         >
             ▶
         </div>
     </div>
 
+    <!-- MARKER TOOLTIP POPUP -->
+    <!-- Rendered outside the SVG container to avoid Z-index issues? Actually relative to main div is fine -->
+    {#if activeMarker}
+        <div
+            class="absolute bottom-20 left-1/2 -translate-x-1/2 w-[90%] md:w-[80%] bg-black/90 border-2 border-yellow-400 p-4 rounded-xl shadow-2xl z-50 text-white"
+            transition:fly={{ y: 20, duration: 200 }}
+        >
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-yellow-400 font-bold text-sm uppercase">
+                    {activeMarker.label}
+                </h3>
+                <button
+                    class="text-gray-400 hover:text-white"
+                    on:click|stopPropagation={() => (activeMarker = null)}
+                    >✖</button
+                >
+            </div>
+            <p class="text-xs text-gray-200 leading-relaxed font-sans">
+                {activeMarker.text}
+            </p>
+        </div>
+    {/if}
+
     <!-- TEXT BOX (Story) -->
-    <div class="bg-[#3E2723] p-3 border-2 border-[#5D4037] relative shadow-lg">
+    <!-- Lowered opacity if marker is active to focus on marker -->
+    <div
+        class="bg-[#3E2723] p-3 border-2 border-[#5D4037] relative shadow-lg transition-opacity duration-300"
+        style="opacity: {activeMarker ? 0.3 : 1}"
+    >
         <h3 class="text-yellow-300 font-bold mb-1">{steps[step].title}</h3>
         <p class="text-sm text-gray-200 leading-snug min-h-[40px]">
             {steps[step].text}
         </p>
         <button
             class="mt-2 text-[#ff9100] text-xs font-bold hover:underline"
-            on:click={nextStep}
+            on:click|stopPropagation={nextStep}
         >
             {step < 3 ? "ÉTAPE SUIVANTE ▶" : "RECOMMENCER ↺"}
         </button>
     </div>
 </div>
+
+<style>
+    .animate-bounce-slight {
+        animation: bounceSlight 2s infinite ease-in-out;
+    }
+    @keyframes bounceSlight {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-3px);
+        }
+    }
+</style>

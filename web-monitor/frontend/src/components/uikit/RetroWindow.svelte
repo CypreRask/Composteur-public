@@ -8,6 +8,8 @@
     export let height = ""; // tailwind height class
     export let mode = "modal"; // "modal" (fixed overlay) or "inline" (relative block)
 
+    export let closable = false; // logic to show close button
+
     // Map logic colors to specific gradients if needed
     const headerColors = {
         blue: "from-blue-800 to-blue-600",
@@ -43,12 +45,12 @@
     <div
         class="relative bg-[#3E2723] p-1 shadow-[8px_8px_0_rgba(0,0,0,0.5)] {width} {height} {isModal
             ? 'mx-4 pointer-events-auto animate-pop-in'
-            : 'w-full'} flex flex-col border-4 border-[#558B2F]"
+            : 'w-full mx-auto'} flex flex-col border-4 border-[#558B2F]"
     >
         <!-- INNER CONTENT -->
         <div class="h-full flex flex-col relative max-h-[90vh]">
-            <!-- Close Button (Only for Modals) -->
-            {#if isModal}
+            <!-- Close Button (For Modals OR Explicit Closable) -->
+            {#if isModal || closable}
                 <button
                     class="absolute top-2 right-2 bg-[#558B2F] border-2 border-[#7CB342] text-white w-8 h-8 flex items-center justify-center font-bold text-lg leading-none z-50 hover:bg-[#7CB342] transition-colors shadow-[2px_2px_0_rgba(0,0,0,0.3)]"
                     on:click={() => dispatch("close")}
@@ -57,7 +59,7 @@
             {/if}
 
             <!-- Scrollable Content -->
-            <div class="p-6 overflow-y-auto custom-scrollbar">
+            <div class="p-6 overflow-y-auto custom-scrollbar flex-grow">
                 <!-- Optional Title (if passed) - Styled as Header -->
                 {#if title && title !== "WINDOW"}
                     <h2

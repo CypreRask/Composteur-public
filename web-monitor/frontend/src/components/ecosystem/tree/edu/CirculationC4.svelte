@@ -23,7 +23,7 @@
         },
         {
             title: "4. Efficience de l'Eau 💧",
-            text: "Résultat : La plante C4 boit 2x moins d'eau que l'arbre pour la même croissance.",
+            text: "Résultat : La plante C4 consomme 1.5 à 2x moins d'eau qu'une plante C3 pour la même biomasse produite.",
             action: "Terminer la leçon",
         },
     ];
@@ -75,9 +75,9 @@
 
                     {#if step === 0}
                         <div
-                            class="absolute inset-0 flex items-center justify-center z-50 cursor-pointer"
+                            class="absolute inset-0 flex items-center justify-center z-50 cursor-magnify"
                             on:click={nextStep}
-                            on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                            on:keydown={(e) => e.key === "Enter" && nextStep()}
                             role="button"
                             tabindex="0"
                         >
@@ -101,9 +101,9 @@
 
                     {#if step === 1}
                         <div
-                            class="absolute inset-0 flex items-center justify-center z-50 cursor-pointer"
+                            class="absolute inset-0 flex items-center justify-center z-50 cursor-magnify"
                             on:click={nextStep}
-                            on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                            on:keydown={(e) => e.key === "Enter" && nextStep()}
                             role="button"
                             tabindex="0"
                         >
@@ -163,9 +163,9 @@
 
                     {#if step === 2}
                         <div
-                            class="absolute inset-0 flex items-center justify-center z-50 cursor-pointer"
+                            class="absolute inset-0 flex items-center justify-center z-50 cursor-magnify"
                             on:click={nextStep}
-                            on:keydown={(e) => e.key === 'Enter' && nextStep()}
+                            on:keydown={(e) => e.key === "Enter" && nextStep()}
                             role="button"
                             tabindex="0"
                         >
@@ -183,11 +183,11 @@
                     <div class="font-bold text-blue-300 mb-1">EFFICIENCE</div>
                     <div class="flex items-center gap-1 mb-1">
                         <div class="w-10 h-2 bg-blue-500 rounded"></div>
-                         C4
+                        C4
                     </div>
                     <div class="flex items-center gap-1 opacity-50">
                         <div class="w-20 h-2 bg-blue-500 rounded"></div>
-                         C3
+                        C3
                     </div>
                 </div>
             {/if}

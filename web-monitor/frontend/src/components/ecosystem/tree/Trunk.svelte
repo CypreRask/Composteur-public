@@ -7,10 +7,11 @@
 </script>
 
 <div
+    on:click={() => dispatch("openCirculation")}
     on:keydown={(e) => e.key === "Enter" && dispatch("openCirculation")}
     role="button"
     tabindex="0"
-    class="relative w-24 h-48 flex flex-col items-center justify-end cursor-pointer group transition-transform hover:scale-105 origin-center"
+    class="relative w-24 h-48 flex flex-col items-center justify-end cursor-magnify group transition-transform hover:scale-105 origin-center"
 >
     <!-- 1. BRANCHES (The Y Shape) - Visible under Canopy -->
     <div class="relative w-full h-16 z-10 -mb-2">
